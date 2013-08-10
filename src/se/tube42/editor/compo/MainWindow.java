@@ -8,6 +8,7 @@ import se.tube42.editor.compo.ui.*;
 
 public class MainWindow extends Frame
 {
+    private EditWindow ew;
     private FormatPanel fp;
     private RegionPanel rp;
     private PropertyPanel pp;
@@ -29,16 +30,39 @@ public class MainWindow extends Frame
             }
         };
         
-        setSize(800, 600);
+        setSize(600, 600);
         setVisible(true);
+        setLocation(0, 0);
         addWindowListener(wc);                
+        
+        EditWindow ew = new EditWindow();        
+        ew.setLocation(getWidth(), 0);        
     }
     
     // -----------------------------------
-    public void setFormat(Format f)
+    public void formatChanged()
     {
-        // TODO
+        System.out.println("region Changed "); // DEBUG
+        
+        regionChanged();
     }
+    
+    public void regionChanged()
+    {
+        System.out.println("region Changed " + pp); // DEBUG
+        
+        if(pp != null) pp.regionChanged();
+        
+        propertyChanged();        
+    }
+    
+    public void propertyChanged() 
+    {
+        System.out.println("property Changed "); // DEBUG
+        
+        if(ew != null) ew.repaint();
+    }
+    
     // -----------------------------------
     private void on_close()
     {

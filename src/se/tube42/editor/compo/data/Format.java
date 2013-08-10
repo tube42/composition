@@ -1,5 +1,7 @@
 package se.tube42.editor.compo.data;
 
+import java.util.*;
+
 /**
  * this class represent common screen dimensions
  */
@@ -9,6 +11,9 @@ public class Format
     public String name;
     public boolean enabled;
     
+    /* list of regions */
+     public HashMap<String, RegionData> regions;
+    
     public Format(String name, int w, int h, boolean landscape)
     {
         final int a = Math.min(w, h);
@@ -17,6 +22,18 @@ public class Format
         this.name = name + (landscape ? "-l" : "-p");
         this.w = landscape ? a : b;
         this.h = landscape ? b : a;
-        this.enabled = true;
+        this.enabled = false;
+        this.regions = new HashMap<String, RegionData>();
+    }
+    
+    
+    public RegionData getRegion(String name)
+    {
+        RegionData rd = regions.get(name);
+        if(rd == null) {
+            rd = new RegionData(name);
+            regions.put(name, rd);
+        }
+        return rd;
     }
 }

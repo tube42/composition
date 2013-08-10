@@ -1,16 +1,15 @@
 package se.tube42.editor.compo;
 
+import se.tube42.editor.compo.data.*;
 
 public class Main
 {
     public static void main(String [] args)
     {
-        EditWindow ew = new EditWindow();
-        TestWindow tw = new TestWindow();
-        MainWindow mw = new MainWindow();
+        // DEBUG:
+        Database.regions.add("base");
+        Database.regions.add("menu_area");
         
-        mw.setLocation(0, 0);
-        ew.setLocation(mw.getWidth(), 0);
-        tw.setLocation(mw.getWidth(), ew.getHeight());
+        MainWindow mw = new MainWindow();        
     }
 }

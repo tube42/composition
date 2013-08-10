@@ -10,7 +10,7 @@ public class FormatPanel extends Panel implements ActionListener
 {
     private MainWindow mw;    
     private List format_list;
-    private Button toggle_button, use_button;
+    private Button toggle_button;
     
     public FormatPanel(MainWindow mw)
     {
@@ -20,30 +20,38 @@ public class FormatPanel extends Panel implements ActionListener
         add(new Label("Formats", Label.CENTER), BorderLayout.NORTH);
                 
         format_list = new List();
-        format_list.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 14));
+        format_list.setFont( UI.LIST_FONT);
+        format_list.addActionListener(this);
         add(format_list, BorderLayout.CENTER);
         update_list();        
         
-        Panel p1 = new Panel(new GridLayout(1, 2, 12, 12));
+       
+        Panel p1 = new Panel();
         add(p1, BorderLayout.SOUTH);
-        p1.add(toggle_button = new Button("Toggle"));
-        p1.add(use_button = new Button("Use"));                
-        
+        p1.add(toggle_button = new Button("Enable/disable"));        
         toggle_button.addActionListener(this);
-        use_button.addActionListener(this);
+        
         
         // make sure we have something to start with
-        mw.setFormat(Database.FORMATS[0]);        
+        Database.FORMATS[0].enabled = true;
+        select_format(0);
     }
     
     private void update_list()
     {
+        int n = format_list.getSelectedIndex(); // remember what was selected
         format_list.removeAll();
         
-        for(final Format f : Database.FORMATS) {   
-            final String str = String.format("[%c] %10s %d*%d", f.enabled ? 'X' : ' ', f.name, f.w, f.h);
+        for(final Format f : Database.FORMATS) {
+            final String str = String.format("%5s [%c] %10s %d*%d", 
+                      f == Database.current_format ? "-->" : "",
+                      f.enabled ? 'X' : ' ', f.name, f.w, f.h);
             format_list.add(str);
         }        
+        
+        // select the previously selected one if possible
+        if(n >= 0 && n < Database.FORMATS.length)
+            format_list.select(n);
     }
     
     public void actionPerformed(ActionEvent e)
@@ -51,15 +59,27 @@ public class FormatPanel extends Panel implements ActionListener
         final Object src = e.getSource();
         final int n = format_list.getSelectedIndex();
         
-        if(src == toggle_button) {
-            if(n != -1) {
-                Database.FORMATS[n].enabled ^= true;
-                update_list();
-            }
-        } else if(src == use_button) {
-            if(n != -1) {
-                mw.setFormat(Database.FORMATS[n]);
-            }            
+        if(src == toggle_button)
+            toggle_format(n);
+        else if(src == format_list)
+            select_format(n);       
+    }
+    
+    private void select_format(int index)
+    {
+        if(index >= 0 && index < Database.FORMATS.length) {
+            Database.current_format = Database.FORMATS[index];
+            mw.formatChanged();
+            update_list();            
         }
     }
+    
+    private void toggle_format(int index)
+    {
+        if(index >= 0 && index < Database.FORMATS.length) {
+            Database.FORMATS[index].enabled ^= true;
+            update_list();            
+        }
+    }
+    
 }
