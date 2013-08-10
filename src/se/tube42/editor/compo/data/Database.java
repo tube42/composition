@@ -7,6 +7,9 @@ import java.util.*;
  */
 public class Database
 {
+    /** a random number generator for evryone to share */
+    public static final Random rnd = new Random();
+    
     /** list of all available formats */
     public static final Format [] FORMATS = 
     {

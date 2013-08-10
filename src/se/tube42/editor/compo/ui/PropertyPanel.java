@@ -8,7 +8,7 @@ import se.tube42.editor.compo.data.*;
 
 public class PropertyPanel 
 extends Panel 
-implements ActionListener, TextListener, ItemListener
+implements ActionListener, ItemListener, KeyListener
 {    
     private static final String [] FIELD_NAMES = {
         "X0", "Y0", "X1", "Y1", "Flags" 
@@ -19,7 +19,7 @@ implements ActionListener, TextListener, ItemListener
     private TextField [] texts;
     private Choice [] types;
     private boolean allow_update;
-    
+    private Label msg;
     public PropertyPanel(MainWindow mw)
     {
         this.mw = mw;
@@ -32,6 +32,9 @@ implements ActionListener, TextListener, ItemListener
         this.p = new Panel(new StackLayout(4, 8) );
         add(p, BorderLayout.CENTER);
         
+        p.add(msg = new Label("", Label.CENTER));
+        msg.setForeground(Color.RED);
+        
         for(int i = 0; i < FIELD_NAMES.length; i++) {            
             final Label l1 = new Label(FIELD_NAMES[i], Label.CENTER);
             l1.setForeground(Color.RED);
@@ -43,18 +46,21 @@ implements ActionListener, TextListener, ItemListener
             p2.add(texts[i] = new TextField("0", 20));
             if(i < 4) {
                 p2.add(new Label("Type", Label.RIGHT));
-                p2.add( types[i] = new Choice());
-                
+                p2.add( types[i] = new Choice());                
                 for(int j = 0; j < Database.TYPES.length; j++) 
                     types[i].add(Database.TYPES[j]);
                 types[i].select(0);
+            } else {
+                p2.add(new Label(""));
+                p2.add(new Label(""));
             }
             p.add(p2);            
         }
         
         regionChanged();
         
-        for(TextField tf : texts) tf.addTextListener(this);
+        // for(TextField tf : texts) tf.addTextListener(this);
+        for(TextField tf : texts) tf.addKeyListener(this);
         for(Choice c : types) c.addItemListener(this);
         this.allow_update = true;
     }
@@ -65,26 +71,30 @@ implements ActionListener, TextListener, ItemListener
         final Object src = e.getSource();        
     }
     
-    public void textValueChanged(TextEvent e)
-    {
-        System.out.println("textValueChanged " + e); // DEBUG
-        dataChanged();
-    }
     
     public void itemStateChanged(ItemEvent e)
     {
-        System.out.println("itemStateChanged " + e); // DEBUG
         dataChanged();        
     }
     
+    public void keyTyped(KeyEvent e) { }
+    public void keyPressed(KeyEvent e) { }
+    
+    public void keyReleased(KeyEvent e)
+    {
+        dataChanged();
+    }
+
     //
     public void regionChanged()
     {   
         if(Database.current_region == null) {
             p.setEnabled(false);
+            msg.setText("(no region selected)");
             return;
         }
         
+        msg.setText("");
         p.setEnabled(true);        
         copy_data(true);
     }
@@ -96,36 +106,45 @@ implements ActionListener, TextListener, ItemListener
         try {
             allow_update = false; // to avoid additional update events...
             
-            copy_data(false);                    
-            mw.propertyChanged();
-            
+            if(copy_data(false)) {
+                msg.setText("");
+                mw.propertyChanged();            
+            } else {
+                msg.setText("ERROR!");                
+            }
         } finally {
             allow_update = true;
         }
     }
     
-    private void copy_data(boolean from_ui)
+    private boolean copy_data(boolean from_ui)
     {
-        final Format f = Database.current_format;
-        final String rname = Database.current_region;
+        try {
         
-        if(f == null || rname == null) return;
-        final RegionData rd = f.getRegion(rname);
-                
-        if(from_ui) {
-            for(int i = 0; i < 4; i++) {
-                texts[i].setText("" + rd.values[i]);
-                types[i].select(rd.types[i]);
-            }
-            texts[4].setText("" + rd.flags);
-        } else {
-            for(int i = 0; i < 4; i++) {
-                rd.values[i] = Integer.parseInt(texts[i].getText());
-                rd.types[i] = types[i].getSelectedIndex();
-            }
-            rd.flags = Integer.parseInt(texts[4].getText());
+            final Format f = Database.current_format;
+            final String rname = Database.current_region;
+            
+            if(f == null || rname == null) return false;
+            final RegionData rd = f.getRegion(rname);
+            
+            if(from_ui) {
+                for(int i = 0; i < 4; i++) {
+                    texts[i].setText("" + rd.values[i]);
+                    types[i].select(rd.types[i]);
+                }
+                texts[4].setText("" + rd.flags);
+            } else {
+                for(int i = 0; i < 4; i++) {
+                    rd.values[i] = Integer.parseInt(texts[i].getText());
+                    rd.types[i] = types[i].getSelectedIndex();
+                }
+                rd.flags = Integer.parseInt(texts[4].getText());
+            }        
+        } catch(Exception e) {
+            return false;
         }
-        
-    }
+        return true;
+    } 
+    
     
 }

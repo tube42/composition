@@ -35,7 +35,7 @@ public class MainWindow extends Frame
         setLocation(0, 0);
         addWindowListener(wc);                
         
-        EditWindow ew = new EditWindow();        
+        ew = new EditWindow(this);        
         ew.setLocation(getWidth(), 0);        
     }
     
@@ -58,9 +58,9 @@ public class MainWindow extends Frame
     
     public void propertyChanged() 
     {
-        System.out.println("property Changed "); // DEBUG
+        System.out.println("property Changed " + ew); // DEBUG
         
-        if(ew != null) ew.repaint();
+        if(ew != null) ew.regionChanged();
     }
     
     // -----------------------------------
