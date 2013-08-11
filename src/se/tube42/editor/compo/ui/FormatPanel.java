@@ -14,6 +14,8 @@ public class FormatPanel extends Panel implements ActionListener
     
     public FormatPanel(MainWindow mw)
     {
+        super(new FlowLayout(FlowLayout.LEFT));
+        
         this.mw = mw;
         
         setLayout(new BorderLayout());        

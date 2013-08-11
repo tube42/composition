@@ -9,6 +9,7 @@ public class EditWindow extends Frame
 {
     private MainWindow mw;
     private EditCanvas canvas;
+    private EditFormat format;
     
     public EditWindow(MainWindow mw)
     {        
@@ -16,9 +17,10 @@ public class EditWindow extends Frame
         
         this.mw = mw;
         
+        add(format = new EditFormat(mw), BorderLayout.NORTH);
         add(canvas = new EditCanvas(mw), BorderLayout.CENTER);
         
-        setSize(350, 250);
+        setSize(500, 700);
         setVisible(true);
     }
     

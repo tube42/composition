@@ -20,6 +20,7 @@ implements ActionListener, ItemListener, KeyListener
     private Choice [] types;
     private boolean allow_update;
     private Label msg;
+    
     public PropertyPanel(MainWindow mw)
     {
         this.mw = mw;
@@ -28,7 +29,8 @@ implements ActionListener, ItemListener, KeyListener
         
         setLayout(new BorderLayout());        
         add(new Label("Properties", Label.CENTER), BorderLayout.NORTH);
-        
+        add(new FilePanel(mw), BorderLayout.SOUTH);
+    
         this.p = new Panel(new StackLayout(4, 8) );
         add(p, BorderLayout.CENTER);
         

@@ -27,7 +27,7 @@ public class Database
     
     /** name of types */
     public static final String [] TYPES = {
-        "PLAIN", "RATIO", "LOCK0", "LOCK1"
+        "PLAIN", "RATIO", "LOCK", "SCALED LOCK"
     };
     
     /** list of all Regions */
@@ -36,4 +36,10 @@ public class Database
     public static Format current_format = null;
     public static String current_region = null;
     
+    // editor grid format
+    public static int grid_size = 12;
+    public static boolean grid_enable = false, grid_show = true;
+    
+    // saving:
+    public static String filename = null;
 }

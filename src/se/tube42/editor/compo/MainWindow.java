@@ -42,25 +42,23 @@ public class MainWindow extends Frame
     // -----------------------------------
     public void formatChanged()
     {
-        System.out.println("region Changed "); // DEBUG
-        
         regionChanged();
     }
     
     public void regionChanged()
     {
-        System.out.println("region Changed " + pp); // DEBUG
-        
         if(pp != null) pp.regionChanged();
-        
         propertyChanged();        
     }
     
     public void propertyChanged() 
     {
-        System.out.println("property Changed " + ew); // DEBUG
-        
         if(ew != null) ew.regionChanged();
+    }
+    
+    public void displayChanged()
+    {
+        propertyChanged();
     }
     
     // -----------------------------------

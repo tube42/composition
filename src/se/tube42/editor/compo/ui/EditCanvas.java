@@ -46,8 +46,26 @@ implements MouseListener, MouseMotionListener
         x0 = (w - format.w) / 2;
         y0 = (h - format.h) / 2;
         
+        
+        // draw the grid?
+        if(Database.grid_show) {
+            final int gsize = Database.grid_size;
+            g.setColor(Color.GRAY);
+            
+            for(int x = 0; x < format.w; x += gsize)
+                g.drawLine(x0 + x, y0, x0 + x, y0 + format.h);
+            
+            for(int y = 0; y < format.h; y += gsize)
+                g.drawLine(x0, y0 + y, x0 + format.w, y0 + y);
+        }
+                
+        // draw a rect around all and one around the screen
+        g.setColor(Color.YELLOW);
+        g.drawRect(0, 0, w-1, h-1);
+        
         g.setColor(Color.BLACK);
         g.drawRect(x0, y0, format.w, format.h);
+        
         
         
         final String rname = Database.current_region;        
@@ -70,10 +88,12 @@ implements MouseListener, MouseMotionListener
                 
                 // draw the handles
                 g.setColor(Color.BLACK);
+                g.drawRect(x0 + x1, y0 + y1, x2 - x1, y2 - y1);
                 g.drawOval( x0 + x1 - HANDLE , y0 + y1 - HANDLE, HANDLE * 2, HANDLE * 2);
                 g.drawOval( x0 + x2 - HANDLE, y0 + y2 - HANDLE, HANDLE * 2, HANDLE * 2);
             } else {
-                g.drawRect(x0 + x1, y0 + y1, x2 - x1, y2 - y1);                            
+                for(int j = -1; j < 2; j++)
+                    g.drawRect(x0 + x1 + j, y0 + y1 + j, x2 - x1 - j * 2, y2 - y1 - j * 2);
             }
         }        
     }
@@ -93,7 +113,6 @@ implements MouseListener, MouseMotionListener
         } else if(Math.abs(region.values[2] - x) < HANDLE && Math.abs(region.values[3] - y) < HANDLE) {
             selected = 1;
         }       
-        System.out.println("selected = " + selected);
     }
     
     public void mouseReleased(MouseEvent e)
@@ -122,8 +141,16 @@ implements MouseListener, MouseMotionListener
     { 
         if(selected == -1 || format == null || region == null) return;
         
-        final int x = e.getX() - x0;
-        final int y = e.getY() - y0;
+        int x = e.getX() - x0;
+        int y = e.getY() - y0;
+        
+        if(Database.grid_enable) {
+            final int g1 = Database.grid_size;
+            final int g2 = g1 / 2;
+            x = ((x + g2) / g1) * g1;
+            y = ((y + g2) / g1) * g1;
+        }
+        
         if(selected == 0) {
             region.values[0] = x;
             region.values[1] = y;

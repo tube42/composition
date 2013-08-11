@@ -25,7 +25,7 @@ public class RegionPanel extends Panel implements ActionListener
         region_list.addActionListener(this);
         add(region_list, BorderLayout.CENTER);
         
-        Panel p1 = new Panel();
+        Panel p1 = new Panel(new FlowLayout(FlowLayout.LEFT));
         add(p1, BorderLayout.SOUTH);
         p1.add(region_name = new TextField("region1", 12));
         p1.add(region_add = new Button("Add"));                        
