@@ -9,8 +9,7 @@ public class Composition
     
     private FormatTemplate [] format_templates;
     private Region [] regions;
-    private FormatTemplate current_format;    
-    
+    private FormatTemplate current_format;        
     private HashMap<String, Region> region_map;
     
     /** load a composition from file */
@@ -55,36 +54,62 @@ public class Composition
     public int getH() { return h; }
     public int getScale() { return scale; }
     
+    /**
+     * returns name of current template
+     */
     public String getName() 
     {
         return current_format == null ? null : current_format.getName();
     }
-    // 
+    
+    /**
+     * manually choose a template.
+     * returns false if not found
+     */
+    public boolean setManually(String name, int scale)
+    {
+        for(FormatTemplate ft : format_templates) {
+            if(ft.getName().equals(name)) {
+                set_format(ft, scale);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * choose a template based on the screen size
+     */
     public boolean resize(int w, int h)
     {
         if(this.w == w && this.h == h) return true;        
         
-        this.current_format = null;
+        FormatTemplate best_format = null;
         int best_err = 0;
         int best_scale = 1;
         for(int scale = 1; scale < 8; scale ++) {
             for(FormatTemplate st : format_templates) {                
                 int err = st.cost(w, h, scale) * scale;
-                if(current_format == null || err < best_err) {
-                    current_format = st;
+                if(best_format == null || err < best_err) {
+                    best_format = st;
                     best_err = err;
                     best_scale = scale;
                 }
             }
         }
         
-        if(current_format == null) 
+        if(best_format == null) 
             return false;
         
-        current_format.build(regions, this.w = w, this.h = h, scale = best_scale);
-        
-        // System.out.println("BEST: " + current_format + " " + best_err + " " + best_scale);
-        
+        this.w = w;
+        this.h = h;        
+        set_format(best_format, best_scale);        
         return true;
     }    
+    
+    private void set_format(FormatTemplate f, int scale)
+    {
+        current_format = f;        
+        current_format.build(regions, this.w, this.h, scale);        
+    }
 }

@@ -40,8 +40,15 @@ public class MainWindow extends Frame
     }
     
     // -----------------------------------
+    public void everythingChanged()
+    {
+        if(fp != null) fp.dataChanged();
+        formatChanged();
+    }
+    
     public void formatChanged()
     {
+        if(rp != null) rp.dataChanged();
         regionChanged();
     }
     

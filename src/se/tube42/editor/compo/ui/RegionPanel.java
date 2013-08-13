@@ -33,7 +33,12 @@ public class RegionPanel extends Panel implements ActionListener
         
         update_list();
     }
-        
+    
+    public void dataChanged()
+    {
+        update_list();
+    }
+    
     public void actionPerformed(ActionEvent e)
     {
         final Object src = e.getSource();
@@ -49,8 +54,7 @@ public class RegionPanel extends Panel implements ActionListener
     private void region_add(String name)
     {
         if(name.length() == 0 || Database.regions.contains(name))
-            return;
-        
+            return;        
         Database.current_region = name;
         Database.regions.add(name);
         update_list();        

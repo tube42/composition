@@ -39,6 +39,11 @@ public class FormatPanel extends Panel implements ActionListener
         select_format(0);
     }
     
+    public void dataChanged()
+    {
+        update_list();
+    }
+    
     private void update_list()
     {
         int n = format_list.getSelectedIndex(); // remember what was selected
