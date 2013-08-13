@@ -30,7 +30,7 @@ public class MainWindow extends Frame
             }
         };
         
-        setSize(600, 600);
+        setSize(800, 600);
         setVisible(true);
         setLocation(0, 0);
         addWindowListener(wc);                

@@ -14,33 +14,39 @@ extends Panel
 implements ActionListener
 {    
     private MainWindow mw;
-    private Button save, load, test;
+    private Button save_as, save, load, test;
     
     public FilePanel(MainWindow mw)
     {
         super(new FlowLayout(FlowLayout.LEFT));
         this.mw = mw;
         
-        add(save = new Button("Save ..."));
+        add(save_as = new Button("Save as ..."));
+        add(save = new Button("Save"));
         add(load = new Button("Load ..."));
         add(test = new Button("Test"));
         
+        save_as.addActionListener(this);
         save.addActionListener(this);
         load.addActionListener(this);
         test.addActionListener(this);
+        
+        update_ui();
     }
-    
+        
     // 
     public void actionPerformed(ActionEvent e)
     {
         final Object src = e.getSource();        
-        if(src == save) {
+        if(src == save_as) {
             String filename = Database.filename;
             if(filename == null)
                 filename = get_filename(true);
             
             if(save(filename)) 
                 Database.filename = filename;
+        } else if(src == save) {
+            save(Database.filename);
         } else if(src == load) {
             String filename = get_filename(false);
             
@@ -52,12 +58,14 @@ implements ActionListener
         } else if(src == test) {
             test(Database.filename);
         }        
+        
+        update_ui();
     }
     
     // 
-    private void update()
+    private void update_ui()
     {
-        test.setEnabled( Database.filename != null);
+        save.setEnabled( Database.filename != null);
     }
     
     

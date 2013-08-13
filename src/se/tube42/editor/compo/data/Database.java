@@ -19,6 +19,8 @@ public class Database
         new Format("HVGA", 320, 480, false),
         new Format("VGA", 480, 640, true),
         new Format("VGA", 480, 640, false),
+        new Format("qHD", 540, 960, true),
+        new Format("qHD", 540, 960, false),
         new Format("WVGA800", 480, 800, true),
         new Format("WVGA800", 480, 800, false),        
         new Format("WXVGA", 800, 1280, true),
@@ -27,7 +29,7 @@ public class Database
     
     /** name of types */
     public static final String [] TYPES = {
-        "PLAIN", "RATIO", "LOCK", "SCALED LOCK"
+        "PLAIN", "RATIO", "LOCK0-u", "LOCK1-u", "LOCK0-s", "LOCK1-s"
     };
     
     /** list of all Regions */

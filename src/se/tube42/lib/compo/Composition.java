@@ -89,7 +89,7 @@ public class Composition
         int best_scale = 1;
         for(int scale = 1; scale < 8; scale ++) {
             for(FormatTemplate st : format_templates) {                
-                int err = st.cost(w, h, scale) * scale;
+                int err = st.cost(w, h, scale) + scale;
                 if(best_format == null || err < best_err) {
                     best_format = st;
                     best_err = err;
@@ -100,7 +100,7 @@ public class Composition
         
         if(best_format == null) 
             return false;
-        
+                
         this.w = w;
         this.h = h;        
         set_format(best_format, best_scale);        
@@ -109,7 +109,10 @@ public class Composition
     
     private void set_format(FormatTemplate f, int scale)
     {
+        this.scale = scale;
         current_format = f;        
         current_format.build(regions, this.w, this.h, scale);        
+        
+        
     }
 }

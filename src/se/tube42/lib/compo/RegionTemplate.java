@@ -6,8 +6,10 @@ public class RegionTemplate
     public static final int
           TYPE_PLAIN = 0,
           TYPE_RATIO = 1,
-          TYPE_LOCK = 2,
-          TYPE_LOCK_SCALED  = 3          
+          TYPE_LOCK0_U = 2,
+          TYPE_LOCK1_U = 3,
+          TYPE_LOCK0_S = 4,
+          TYPE_LOCK1_S = 5
           ;
     
     private static int [] tmp = new int[4];
@@ -42,42 +44,29 @@ public class RegionTemplate
         final int t3 = (types >> 12) & 0xF;
         
         
-        // X0
-        if(t0 == TYPE_RATIO) tmp[0] = values[0] * rw / w;            
-        else if(t0 == TYPE_LOCK) tmp[0] = values[0];
-        else if(t0 == TYPE_LOCK_SCALED) tmp[0] = values[0] * scale;
-        else tmp[0] = values[0] * scale + dw;
-        
-        // Y0
-        if(t1 == TYPE_RATIO) tmp[1] = values[1] * rh / h;
-        else if(t1 == TYPE_LOCK) tmp[1] = values[1];
-        else if(t1 == TYPE_LOCK_SCALED) tmp[1] = values[1] * scale;        
-        else tmp[1] = values[1] * scale + dh;
-        
-        // X1
-        if(t2 == TYPE_RATIO) tmp[2] = values[2] * rw / w;
-        else if(t2 == TYPE_LOCK) tmp[2] = rw - (w - values[2]);
-        else if(t2 == TYPE_LOCK_SCALED) tmp[2] = rw - (w - values[2]) * scale;
-        else tmp[2] = values[2] * scale + dw;
-        
-        // Y1
-        if(t3 == TYPE_RATIO) tmp[3] = values[3] * rh / h;
-        else if(t3 == TYPE_LOCK) tmp[3] = rh - (h - values[3]);
-        else if(t3 == TYPE_LOCK_SCALED) tmp[3] = rh - (h - values[3]) * scale;
-        else tmp[3] = values[3] * scale + dh;
-        
-        
+        tmp[0] = get_one(t0, values[0], scale, w, rw);
+        tmp[1] = get_one(t1, values[1], scale, h, rh);
+        tmp[2] = get_one(t2, values[2], scale, w, rw);
+        tmp[3] = get_one(t3, values[3], scale, h, rh);
         
         
         // write results to Region
         r.set(tmp, flags);
     }
     
-    private int get_point(int p0, int p1, int scale, int type,
-              int max, int real_max)
+    private int get_one(int type, int value, int scale, int top_temp, int top_real)
     {
-        // TODO
-        return p0 * scale;
+        switch(type) {
+        case TYPE_RATIO: return value * top_real / top_temp;            
+        case TYPE_LOCK0_U: return value;
+        case TYPE_LOCK0_S: return value * scale;
+        case TYPE_LOCK1_U: return top_real - (top_temp - value);
+        case TYPE_LOCK1_S: return top_real - (top_temp - value) * scale;        
+        default: // TYPE_PLAIN
+            final int dw = (top_real - top_temp * scale) / 2;            
+            return value * scale + dw;
+        }        
     }
+
             
 }
