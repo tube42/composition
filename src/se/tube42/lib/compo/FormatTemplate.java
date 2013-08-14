@@ -15,8 +15,8 @@ package se.tube42.lib.compo;
         this.regions = regions;
     }
     
-    public int getW() { return w; }
-    public int getH() { return h; }
+    public int getWidth() { return w; }
+    public int getHeight() { return h; }
     public String getName() { return name; }
     
     /* package */ void build(Region [] regions_, int rw, int rh, int scale)

@@ -37,13 +37,18 @@ public class CompositionReader2
         final int fcnt = readShort();        
         final int rcnt = readShort();
         
+        // other data
+        Database.regions_hidden = readInt();
+        final int reserved = readInt(); // not used
+        
+        // get the strings
         ArrayList<String> fnames = new ArrayList<String>();
         ArrayList<String> rnames = new ArrayList<String>();
         for(int i = 0; i < fcnt; i++) fnames.add(readString());
         for(int i = 0; i < rcnt; i++) rnames.add(readString());
         
-        HashMap<String, Format> fmap = new HashMap<String, Format>();
-        
+        // ...
+        HashMap<String, Format> fmap = new HashMap<String, Format>();        
         
         Database.regions.clear();        
         for(String rn : rnames) Database.regions.add( rn);

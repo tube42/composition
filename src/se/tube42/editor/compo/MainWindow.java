@@ -56,6 +56,13 @@ public class MainWindow extends Frame
     {
         if(pp != null) pp.regionChanged();
         propertyChanged();        
+        
+        setTitle(
+                 "[Composition    " + 
+                 (Database.current_format == null ? "-" : Database.current_format.name)
+                 + "    " +
+                 (Database.current_region == null ? "-" : Database.current_region)
+                 + "]");
     }
     
     public void propertyChanged() 

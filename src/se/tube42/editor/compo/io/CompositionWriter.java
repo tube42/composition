@@ -37,6 +37,10 @@ public class CompositionWriter
             // write sizes and names
             writeShort(formats.size());        
             writeShort(regions.size());
+            
+            writeInt(Database.regions_hidden);
+            writeInt(0); // reserver
+            
             for(Format f : formats) writeString(f.name);
             for(String s : regions) writeString(s);
             

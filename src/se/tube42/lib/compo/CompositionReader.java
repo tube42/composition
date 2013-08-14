@@ -40,6 +40,9 @@ public class CompositionReader
         final int formats_cnt = readShort();        
         final int regions_cnt = readShort();
         
+        final int dummy1 = readInt(); // not used
+        final int dummy2 = readInt(); // not used
+        
         final String [] formats_names = new String[formats_cnt];
         final String [] regions_names = new String[regions_cnt];
         for(int i = 0; i < formats_cnt; i++) formats_names[i] = readString();        

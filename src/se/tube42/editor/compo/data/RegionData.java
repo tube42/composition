@@ -4,7 +4,7 @@ package se.tube42.editor.compo.data;
  * editable version of Region
  */
 public class RegionData
-{    
+{   
     public int []values;
     public int []types;
     public int flags;

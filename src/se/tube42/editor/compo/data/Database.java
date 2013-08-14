@@ -35,6 +35,8 @@ public class Database
     /** list of all Regions */
     public static ArrayList<String> regions = new ArrayList<String>();
     
+    public static int regions_hidden  = 0;
+    
     public static Format current_format = null;
     public static String current_region = null;
     

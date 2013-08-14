@@ -50,8 +50,18 @@ public class Composition
     {
         return region_map.get(name);
     }
-    public int getW() { return w; }
-    public int getH() { return h; }
+    
+    public int getFormatWidth() 
+    { 
+        return current_format == null ? 0 : current_format.getWidth();
+    }
+    public int getFormatHeight()
+    {
+        return current_format == null ? 0 : current_format.getHeight();
+    }        
+    
+    public int getWidth() { return w; }
+    public int getHeight() { return h; }
     public int getScale() { return scale; }
     
     /**

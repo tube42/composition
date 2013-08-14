@@ -79,9 +79,16 @@ public class RegionPanel extends Panel implements ActionListener
         
         
         
-        for(final String s : Database.regions) {
-            final String str = String.format("%5s %s", 
+        final int len = Database.regions.size();
+        for(int i = 0; i < len; i++) {
+            final String s = Database.regions.get(i);
+            
+            final boolean hidden = i < 32 && 
+                  (Database.regions_hidden & (1 << i)) != 0;
+            
+            final String str = String.format("%5s %c %s", 
                       s.equals(Database.current_region) ? "-->" : "",
+                      hidden ? 'H' : ' ',                      
                       s);
             region_list.add(str);
         }        

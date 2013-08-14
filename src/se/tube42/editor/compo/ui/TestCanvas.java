@@ -23,7 +23,7 @@ extends Canvas
     {
         final int w = getWidth();
         final int h = getHeight();        
-        
+                
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, w, h);
         
@@ -37,6 +37,17 @@ extends Canvas
         g.drawString("Dimensions: " + w + "x" + h, 20, 20);
         g.drawString("Template: " + c.getName() + ", scale: " + c.getScale(), 20, 50);
         
+        
+        // 
+        final int s1 = c.getScale();                
+        final int w1 = c.getFormatWidth() * s1;
+        final int h1 = c.getFormatHeight() * s1;
+        
+        g.setColor(Color.GRAY);        
+        g.drawRect( (w - w1) / 2, (h - h1) / 2, w1, h1);
+                  
+        
+        // 
         final Region [] rs = c.getAll();
         for(int i = 0; i < rs.length; i++) {
             final Region r = rs[i];

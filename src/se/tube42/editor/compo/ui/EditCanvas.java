@@ -73,9 +73,15 @@ implements MouseListener, MouseMotionListener
         region = format.getRegion(rname);
         
         
-        for(int i = 0; i < Database.regions.size(); i++) {
+        final int len = Database.regions.size();
+        for(int i = 0; i < len; i++) {
+            
+            if( i < 32 && (Database.regions_hidden & (1 << i)) != 0) 
+                continue;
+            
             final String name = Database.regions.get(i);
             final RegionData r = format.getRegion(name);
+            
             
             int x1 = r.values[0];
             int y1 = r.values[1];
