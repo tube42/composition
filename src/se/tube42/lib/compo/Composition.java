@@ -11,6 +11,7 @@ public class Composition
     private Region [] regions;
     private FormatTemplate current_format;        
     private HashMap<String, Region> region_map;
+    private boolean flip_h, flip_v;
     
     /** load a composition from file */
     public static Composition load(InputStream is)
@@ -32,6 +33,8 @@ public class Composition
         this.h = -1;
         this.scale = 1;
         
+        this.flip_h = false;
+        this.flip_v = false;
         this.format_templates = formats;
         this.regions = new Region[region_names.length];
         for(int i = 0; i < regions.length; i++) {
@@ -64,6 +67,21 @@ public class Composition
     public int getHeight() { return h; }
     public int getScale() { return scale; }
     
+    /**
+     * flips regions in horizontal and/or vertical axis
+     */
+    public void flip(boolean flip_h, boolean flip_v)
+    {
+        if(this.flip_h != flip_h || this.flip_v != flip_v) {
+            this.flip_h = flip_h;
+            this.flip_v = flip_v;
+            
+            // this will force a resize            
+            w = -1; 
+            int oldw = w;                       
+            resize(oldw, h);
+        }
+    }
     /**
      * returns name of current template
      */
@@ -121,7 +139,7 @@ public class Composition
     {
         this.scale = scale;
         current_format = f;        
-        current_format.build(regions, this.w, this.h, scale);        
+        current_format.build(regions, this.w, this.h, scale, flip_h, flip_v);
         
         
     }

@@ -45,6 +45,7 @@ implements ActionListener
             
             if(save(filename)) 
                 Database.filename = filename;
+            
         } else if(src == save) {
             save(Database.filename);
         } else if(src == load) {
@@ -75,7 +76,7 @@ implements ActionListener
                   save ? "Save as..." :  "Load ...",
                   save ? FileDialog.SAVE : FileDialog.LOAD);
         fd.show();
-        return fd.getFile();
+        return fd.getDirectory() + File.separator + fd.getFile();
     }
     
     private boolean save(String filename)
@@ -90,7 +91,10 @@ implements ActionListener
             return false;
         }  finally {
             try {
-                if(os != null) os.close();
+                if(os != null) {
+                    os.flush();
+                    os.close();
+                }
             } catch(IOException e) { }
         }
         return true;

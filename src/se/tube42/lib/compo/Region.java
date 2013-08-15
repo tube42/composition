@@ -1,7 +1,7 @@
 
 package se.tube42.lib.compo;
 
-public class Region
+public final class Region
 {
     private int x, y, w, h, flags;
     private String name;

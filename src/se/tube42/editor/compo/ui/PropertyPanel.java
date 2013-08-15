@@ -11,7 +11,7 @@ extends Panel
 implements ActionListener, ItemListener, KeyListener
 {    
     private static final String [] FIELD_NAMES = {
-        "X0", "Y0", "X1", "Y1", "Flags" 
+        "X0", "Y0", "X1", "Y1", "Misc." 
     };        
     
     private MainWindow mw;
@@ -19,7 +19,7 @@ implements ActionListener, ItemListener, KeyListener
     private TextField [] texts;
     private Choice [] types;
     private boolean allow_update;
-    private Label msg, name;
+    private Label msg, name, dx, dy;
     private Button remove, hide;
     
     public PropertyPanel(MainWindow mw)
@@ -45,17 +45,20 @@ implements ActionListener, ItemListener, KeyListener
             p.add(l1);
             
             Panel p2 = new Panel(new GridLayout(2, 2, 4, 4));
-            p2.add(new Label("Value", Label.RIGHT));
-            p2.add(texts[i] = new TextField("0", 20));
             if(i < 4) {
+                p2.add(new Label("Value", Label.RIGHT));
+                p2.add(texts[i] = new TextField("0", 20));
+                
                 p2.add(new Label("Type", Label.RIGHT));
                 p2.add( types[i] = new Choice());                
                 for(int j = 0; j < Database.TYPES.length; j++) 
                     types[i].add(Database.TYPES[j]);
                 types[i].select(0);
             } else {
-                p2.add(new Label(""));
-                p2.add(new Label(""));
+                p2.add(new Label("Flags", Label.RIGHT));
+                p2.add(texts[i] = new TextField("0", 20));                
+                p2.add(dx = new Label("", Label.CENTER));
+                p2.add(dy = new Label("", Label.CENTER));
             }
             p.add(p2);            
         }
@@ -107,8 +110,8 @@ implements ActionListener, ItemListener, KeyListener
     
     
     public void itemStateChanged(ItemEvent e)
-    {
-        dataChanged();        
+    {        
+        dataChanged();                
     }
     
     public void keyTyped(KeyEvent e) { }
@@ -138,7 +141,7 @@ implements ActionListener, ItemListener, KeyListener
     
     public void dataChanged()
     {
-        if(!allow_update) return;
+        // if(!allow_update) return;
         
         try {
             allow_update = false; // to avoid additional update events...
@@ -161,8 +164,10 @@ implements ActionListener, ItemListener, KeyListener
             final Format f = Database.current_format;
             final String rname = Database.current_region;
             
+            
             if(f == null || rname == null) return false;
             final RegionData rd = f.getRegion(rname);
+            
             
             if(from_ui) {
                 for(int i = 0; i < 4; i++) {
@@ -176,7 +181,11 @@ implements ActionListener, ItemListener, KeyListener
                     rd.types[i] = types[i].getSelectedIndex();
                 }
                 rd.flags = Integer.parseInt(texts[4].getText());
-            }        
+            } 
+            
+            dx.setText("dx=" + (rd.values[2] - rd.values[0]) );
+            dy.setText("dy=" + (rd.values[3] - rd.values[1]) );
+            
         } catch(Exception e) {
             return false;
         }

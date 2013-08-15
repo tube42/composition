@@ -31,7 +31,8 @@ public class RegionTemplate
     }
     
     /* package */ void build(Region r, int w, int h, 
-              int rw, int rh, int scale)
+              int rw, int rh, int scale,
+              boolean flip_h, boolean flip_v)
     {  
         
         // initial values without any changes
@@ -49,6 +50,16 @@ public class RegionTemplate
         tmp[2] = get_one(t2, values[2], scale, w, rw);
         tmp[3] = get_one(t3, values[3], scale, h, rh);
         
+        
+        // flip it?
+        if(flip_h) {
+            tmp[0] = rw - tmp[0];
+            tmp[2] = rw - tmp[2];
+        }
+        if(flip_v) {
+            tmp[1] = rh - tmp[1];
+            tmp[3] = rh - tmp[3];
+        }
         
         // write results to Region
         r.set(tmp, flags);

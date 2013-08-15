@@ -134,12 +134,10 @@ implements MouseListener, MouseMotionListener
                 RegionData rd = format.getRegion(s);
                 if(rd.hit(x, y)) {
                     Database.current_region = s;
-                    mw.regionChanged();
+                    mw.everythingChanged();
                     return;
                 }
-            }
-            
-            
+            }                        
         }        
     }
     

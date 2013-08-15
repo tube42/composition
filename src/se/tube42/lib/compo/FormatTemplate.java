@@ -19,13 +19,13 @@ package se.tube42.lib.compo;
     public int getHeight() { return h; }
     public String getName() { return name; }
     
-    /* package */ void build(Region [] regions_, int rw, int rh, int scale)
+    /* package */ void build(Region [] regions_, int rw, int rh, int scale, boolean flip_h, boolean flip_v)
     {
         this.rw = rw;
         this.rh = rh;
         
         for(int i = 0; i < regions.length; i++)
-            regions[i].build(regions_[i], w, h, rw, rh, scale);       
+            regions[i].build(regions_[i], w, h, rw, rh, scale, flip_h, flip_v);
     }
     
     
