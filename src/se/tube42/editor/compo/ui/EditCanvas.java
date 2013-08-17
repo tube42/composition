@@ -144,8 +144,7 @@ implements MouseListener, MouseMotionListener
         
         
         final int len = Database.regions.size();
-        for(int i = 0; i < len; i++) {
-            
+        for(int i = 0; i < len; i++) {            
             if( i < 32 && (Database.regions_hidden & (1 << i)) != 0) 
                 continue;
             
@@ -160,7 +159,16 @@ implements MouseListener, MouseMotionListener
             
             g.setColor( UI.REGION_COLORS[i % UI.REGION_COLORS.length]);
             if(r == region) {
-                g.fillRect(x0 + x1, y0 + y1, x2 - x1, y2 - y1);
+                
+                // draw align lines
+                g.setColor(Color.ORANGE);
+                if(align_horizontal(format, r, x1)) g.drawLine(x0 + x1, 0, x0 + x1, h);                
+                if(align_horizontal(format, r, x2)) g.drawLine(x0 + x2, 0, x0 + x2, h);                
+                if(align_vertical(format, r, y1)) g.drawLine(0, y0 + y1, w, y0 + y1);
+                if(align_vertical(format, r, y2)) g.drawLine(0, y0 + y2, w, y0 + y2);
+                
+                // draw the box
+                g.fillRect(x0 + x1, y0 + y1, x2 - x1, y2 - y1);                
                 
                 // draw the handles
                 g.setColor(Color.BLACK);
@@ -210,4 +218,25 @@ implements MouseListener, MouseMotionListener
         }        
     }
     
+    private boolean align_horizontal(Format f, RegionData r, int x)
+    {        
+        for(final String r2name : Database.regions) {
+            final RegionData r2 = f.getRegion(r2name);
+            if(r == r2) continue;
+            if(r2.values[0] == x || r2.values[2] == x)
+                return true;
+        }
+        return false;
+    }
+    
+    private boolean align_vertical(Format f, RegionData r, int y)
+    {        
+        for(final String r2name : Database.regions) {
+            final RegionData r2 = f.getRegion(r2name);
+            if(r == r2) continue;
+            if(r2.values[1] == y || r2.values[3] == y)
+                return true;
+        }
+        return false;
+    }    
 }

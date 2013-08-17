@@ -7,7 +7,9 @@ import se.tube42.editor.compo.*;
 import se.tube42.editor.compo.data.*;
 import se.tube42.editor.compo.service.*;
 
-public class FormatPanel extends Panel implements ActionListener
+public class FormatPanel 
+extends Panel 
+implements ItemListener
 {
     private MainWindow mw;    
     private List format_list;
@@ -23,18 +25,29 @@ public class FormatPanel extends Panel implements ActionListener
                 
         format_list = new List();
         format_list.setFont( UI.LIST_FONT);
-        format_list.addActionListener(this);
+        format_list.addItemListener(this);
         add(format_list, BorderLayout.CENTER);
         update_list();                               
         
         // make sure we have something to start with
-        Database.FORMATS[0].enabled = true;
-        select_format(0);
+        Database.current_format = Database.FORMATS[0];
+        Database.current_format.enabled = true;
+        format_list.select(0);
+        dataChanged();
     }
     
     public void dataChanged()
     {
-        update_list();
+        int n = format_list.getSelectedIndex();
+        
+        // somehow we have selected a different format
+        if(n != -1 && Database.FORMATS[n] == Database.current_format) {
+            for(int i = 0; i < Database.FORMATS.length; i++)
+                if(Database.FORMATS[i] == Database.current_format)
+                    format_list.select(i);
+        }
+        
+        update_list();                    
     }
     
     private void update_list()
@@ -43,8 +56,7 @@ public class FormatPanel extends Panel implements ActionListener
         format_list.removeAll();
         
         for(final Format f : Database.FORMATS) {
-            final String str = String.format("%5s [%c] %10s %d*%d", 
-                      f == Database.current_format ? "-->" : "",
+            final String str = String.format(" [%c] %10s %d*%d", 
                       f.enabled ? 'X' : ' ', f.name, f.w, f.h);
             format_list.add(str);
         }        
@@ -54,21 +66,11 @@ public class FormatPanel extends Panel implements ActionListener
             format_list.select(n);
     }
     
-    public void actionPerformed(ActionEvent e)
+    public void itemStateChanged(ItemEvent e)
     {
-        final Object src = e.getSource();
-        final int n = format_list.getSelectedIndex();
-        
-        if(src == format_list)
-            select_format(n);       
+        int n = format_list.getSelectedIndex(); // remember what was selected        
+        Database.current_format = (n == -1) ? null : Database.FORMATS[n];
+        mw.formatChanged();        
     }
-    
-    private void select_format(int index)
-    {
-        if(index >= 0 && index < Database.FORMATS.length) {
-            Database.current_format = Database.FORMATS[index];
-            mw.formatChanged();
-            update_list();            
-        }
-    }    
+
 }

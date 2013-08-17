@@ -39,6 +39,8 @@ public class MainWindow extends Frame
         
         ew = new EditWindow(this);        
         ew.setLocation(getWidth(), 0);        
+        
+        everythingChanged(); // force a complete update
     }
     
     // -----------------------------------

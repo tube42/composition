@@ -66,7 +66,6 @@ public class CompositionReader2
             int w = readShort();
             int h = readShort();
             
-            Database.current_format = f; // helps UI select a valid format       
             for(String m : rnames) {
                 RegionData r = f.getRegion(m);
                 
@@ -76,9 +75,7 @@ public class CompositionReader2
                     r.types[k] = t & 0xF;
                     t >>= 4;
                 }
-                r.flags = readInt();
-                
-                Database.current_region = r.getName(); // helps UI select a valid region 
+                r.flags = readInt();                
             }
         }
     }

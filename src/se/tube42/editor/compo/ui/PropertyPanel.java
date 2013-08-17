@@ -20,7 +20,6 @@ implements ActionListener, ItemListener, KeyListener
     private Panel p;
     private TextField [] texts;
     private Choice [] types;
-    private boolean allow_update;
     private Label msg, name, dx, dy;
     
     public PropertyPanel(MainWindow mw)
@@ -69,7 +68,6 @@ implements ActionListener, ItemListener, KeyListener
         // for(TextField tf : texts) tf.addTextListener(this);
         for(TextField tf : texts) tf.addKeyListener(this);
         for(Choice c : types) c.addItemListener(this);
-        this.allow_update = true;        
     }
     
     // 
@@ -116,19 +114,11 @@ implements ActionListener, ItemListener, KeyListener
     
     public void dataChanged()
     {
-        // if(!allow_update) return;
-        
-        try {
-            allow_update = false; // to avoid additional update events...
-            
-            if(copy_data(false)) {
-                msg.setText("");
-                mw.propertyChanged();            
-            } else {
-                msg.setText("ERROR!");                
-            }
-        } finally {
-            allow_update = true;
+        if(copy_data(false)) {
+            msg.setText("");
+            mw.propertyChanged();            
+        } else {
+            msg.setText("ERROR!");                
         }
     }
     
@@ -158,8 +148,8 @@ implements ActionListener, ItemListener, KeyListener
                 rd.flags = Integer.parseInt(texts[4].getText());
             } 
             
-            dx.setText("dx=" + (rd.values[2] - rd.values[0]) );
-            dy.setText("dy=" + (rd.values[3] - rd.values[1]) );
+            dx.setText("dx = " + (rd.values[2] - rd.values[0]) );
+            dy.setText("dy = " + (rd.values[3] - rd.values[1]) );
             
         } catch(Exception e) {
             return false;

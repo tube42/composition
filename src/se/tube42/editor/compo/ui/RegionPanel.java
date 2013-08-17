@@ -6,7 +6,9 @@ import java.awt.event.*;
 import se.tube42.editor.compo.*;
 import se.tube42.editor.compo.data.*;
 
-public class RegionPanel extends Panel implements ActionListener
+public class RegionPanel 
+extends Panel 
+implements ActionListener, ItemListener
 {    
     private MainWindow mw;
     private Button region_add;
@@ -22,7 +24,7 @@ public class RegionPanel extends Panel implements ActionListener
         
         region_list = new List();
         region_list.setFont( UI.LIST_FONT);        
-        region_list.addActionListener(this);
+        region_list.addItemListener(this);
         add(region_list, BorderLayout.CENTER);
         
         Panel p1 = new Panel(new FlowLayout(FlowLayout.LEFT));
@@ -30,7 +32,6 @@ public class RegionPanel extends Panel implements ActionListener
         p1.add(region_name = new TextField("region1", 12));
         p1.add(region_add = new Button("Add"));                        
         region_add.addActionListener(this);
-        
         update_list();
     }
     
@@ -45,10 +46,15 @@ public class RegionPanel extends Panel implements ActionListener
         if(src == region_add) {           
             final String name = region_name.getText();
             region_add(name);
-        } else if(src == region_list) {  
-            final int n = region_list.getSelectedIndex();
-            select_region(n);
         }                        
+    }
+    
+    public void itemStateChanged(ItemEvent e)
+    {
+        int n = region_list.getSelectedIndex(); // remember what was selected        
+        Database.current_region = (n == -1) ? null : Database.regions.get(n);
+        mw.regionChanged();
+        
     }
     
     private void region_add(String name)
@@ -75,9 +81,7 @@ public class RegionPanel extends Panel implements ActionListener
     private void update_list()
     {
         int n = region_list.getSelectedIndex(); // remember what was selected
-        region_list.removeAll();
-        
-        
+        region_list.removeAll();                
         
         final int len = Database.regions.size();
         for(int i = 0; i < len; i++) {
@@ -86,10 +90,8 @@ public class RegionPanel extends Panel implements ActionListener
             final boolean hidden = i < 32 && 
                   (Database.regions_hidden & (1 << i)) != 0;
             
-            final String str = String.format("%5s %c %s", 
-                      s.equals(Database.current_region) ? "-->" : "",
-                      hidden ? 'H' : ' ',                      
-                      s);
+            final String str = String.format(" [%c] %s", 
+                      hidden ? ' ' : 'X', s);
             region_list.add(str);
         }        
         
