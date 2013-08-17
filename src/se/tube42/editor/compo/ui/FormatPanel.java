@@ -38,15 +38,6 @@ implements ItemListener
     
     public void dataChanged()
     {
-        int n = format_list.getSelectedIndex();
-        
-        // somehow we have selected a different format
-        if(n != -1 && Database.FORMATS[n] == Database.current_format) {
-            for(int i = 0; i < Database.FORMATS.length; i++)
-                if(Database.FORMATS[i] == Database.current_format)
-                    format_list.select(i);
-        }
-        
         update_list();                    
     }
     
@@ -61,9 +52,15 @@ implements ItemListener
             format_list.add(str);
         }        
         
+        
+        // somehow we have selected a different format
+        if(n < 0 || n >= Database.FORMATS.length || Database.FORMATS[n] != Database.current_format) {
+            n = ServiceProvider.getCurrentFormatIndex();
+        }
+        
+        
         // select the previously selected one if possible
-        if(n >= 0 && n < Database.FORMATS.length)
-            format_list.select(n);
+        format_list.select(n);
     }
     
     public void itemStateChanged(ItemEvent e)

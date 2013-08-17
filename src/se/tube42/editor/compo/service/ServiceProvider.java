@@ -137,7 +137,15 @@ public class ServiceProvider
         f.regions.put(rname, r);
         return r;
     }
-              
+    
+    public static int getCurrentFormatIndex()
+    {
+        for(int i = 0; i < Database.FORMATS.length; i++)
+            if(Database.FORMATS[i] == Database.current_format)
+                return i;
+        return -1;
+    }    
+    
     // REGION
     public static void centerCurrentRegion(boolean h, boolean v)
     {
@@ -175,4 +183,20 @@ public class ServiceProvider
               Database.regions.size() > 0 ? 
               Database.regions.get(0) : null;        
     }
+    
+    public static int getCurrentRegionIndex()
+    {
+        final String str = Database.current_region;
+        if(str == null) return -1;
+        
+        int i = 0;
+        for(String str2 : Database.regions) {
+            if(str.equals(str2))
+                return i;
+            i++;
+        }
+        
+        return -1;
+    }    
+    
 }

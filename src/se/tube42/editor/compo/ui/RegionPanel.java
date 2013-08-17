@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 import se.tube42.editor.compo.*;
 import se.tube42.editor.compo.data.*;
+import se.tube42.editor.compo.service.*;
 
 public class RegionPanel 
 extends Panel 
@@ -63,7 +64,7 @@ implements ActionListener, ItemListener
             return;        
         Database.current_region = name;
         Database.regions.add(name);
-        update_list();        
+        update_list(); 
         mw.regionChanged();       
     }
     
@@ -80,9 +81,8 @@ implements ActionListener, ItemListener
     
     private void update_list()
     {
-        int n = region_list.getSelectedIndex(); // remember what was selected
-        region_list.removeAll();                
-        
+        region_list.removeAll();
+                
         final int len = Database.regions.size();
         for(int i = 0; i < len; i++) {
             final String s = Database.regions.get(i);
@@ -95,8 +95,7 @@ implements ActionListener, ItemListener
             region_list.add(str);
         }        
         
-        // select the previously selected one if possible
-        if(n >= 0 && n < Database.regions.size())
-            region_list.select(n);
+        int n = ServiceProvider.getCurrentRegionIndex();
+        region_list.select(n);
     }
 }

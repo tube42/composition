@@ -42,7 +42,7 @@ implements ActionListener
         
         mregion = add_menu("Region");
         
-        ehide = add_item(mregion, "Hide region");
+        ehide = add_item(mregion, "Show/hide");
         mregion.addSeparator();                
         eremove = add_item(mregion, "Remove region");
         mregion.addSeparator();                

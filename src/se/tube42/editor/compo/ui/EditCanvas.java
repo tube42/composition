@@ -11,7 +11,7 @@ public class EditCanvas
 extends Canvas
 implements MouseListener, MouseMotionListener
 {
-    private static final int HANDLE = 5;
+    private static final int HANDLE = 12;
     
     private MainWindow mw;
     private int x0, y0;
@@ -157,15 +157,18 @@ implements MouseListener, MouseMotionListener
             int x2 = r.values[2];
             int y2 = r.values[3];
             
-            g.setColor( UI.REGION_COLORS[i % UI.REGION_COLORS.length]);
-            if(r == region) {
                 
-                // draw align lines
+            // draw align lines            
+            if(r == region) {
                 g.setColor(Color.ORANGE);
                 if(align_horizontal(format, r, x1)) g.drawLine(x0 + x1, 0, x0 + x1, h);                
                 if(align_horizontal(format, r, x2)) g.drawLine(x0 + x2, 0, x0 + x2, h);                
                 if(align_vertical(format, r, y1)) g.drawLine(0, y0 + y1, w, y0 + y1);
                 if(align_vertical(format, r, y2)) g.drawLine(0, y0 + y2, w, y0 + y2);
+            }
+            
+            g.setColor( UI.REGION_COLORS[i % UI.REGION_COLORS.length]);
+            if(r == region) {
                 
                 // draw the box
                 g.fillRect(x0 + x1, y0 + y1, x2 - x1, y2 - y1);                
