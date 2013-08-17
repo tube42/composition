@@ -12,16 +12,18 @@ public class MainWindow extends Frame
     private FormatPanel fp;
     private RegionPanel rp;
     private PropertyPanel pp;
+    private MainMenuBar mb;
     
     public MainWindow()
     {
         super("[Composition]");
         
-        setLayout(new GridLayout(1, 3));
-        
+        setLayout(new GridLayout(1, 3));        
         add( fp = new FormatPanel(this));
         add( rp = new RegionPanel(this));
         add( pp = new PropertyPanel(this));
+        
+        setMenuBar( mb = new MainMenuBar(this));
         
         // Frame stuff        
         final WindowAdapter wc = new WindowAdapter() {
@@ -56,6 +58,8 @@ public class MainWindow extends Frame
     {
         if(pp != null) pp.regionChanged();
         propertyChanged();        
+        
+        if(mb != null) mb.stateChanged();
         
         setTitle(
                  "[Composition    " + 

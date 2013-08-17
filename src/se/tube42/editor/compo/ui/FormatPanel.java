@@ -5,12 +5,12 @@ import java.awt.event.*;
 
 import se.tube42.editor.compo.*;
 import se.tube42.editor.compo.data.*;
+import se.tube42.editor.compo.service.*;
 
 public class FormatPanel extends Panel implements ActionListener
 {
     private MainWindow mw;    
     private List format_list;
-    private Button toggle_button;
     
     public FormatPanel(MainWindow mw)
     {
@@ -25,14 +25,7 @@ public class FormatPanel extends Panel implements ActionListener
         format_list.setFont( UI.LIST_FONT);
         format_list.addActionListener(this);
         add(format_list, BorderLayout.CENTER);
-        update_list();        
-        
-       
-        Panel p1 = new Panel();
-        add(p1, BorderLayout.SOUTH);
-        p1.add(toggle_button = new Button("Enable/disable"));        
-        toggle_button.addActionListener(this);
-        
+        update_list();                               
         
         // make sure we have something to start with
         Database.FORMATS[0].enabled = true;
@@ -66,9 +59,7 @@ public class FormatPanel extends Panel implements ActionListener
         final Object src = e.getSource();
         final int n = format_list.getSelectedIndex();
         
-        if(src == toggle_button)
-            toggle_format(n);
-        else if(src == format_list)
+        if(src == format_list)
             select_format(n);       
     }
     
@@ -79,14 +70,5 @@ public class FormatPanel extends Panel implements ActionListener
             mw.formatChanged();
             update_list();            
         }
-    }
-    
-    private void toggle_format(int index)
-    {
-        if(index >= 0 && index < Database.FORMATS.length) {
-            Database.FORMATS[index].enabled ^= true;
-            update_list();            
-        }
-    }
-    
+    }    
 }

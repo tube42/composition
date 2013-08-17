@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import se.tube42.editor.compo.*;
 import se.tube42.editor.compo.data.*;
+import se.tube42.editor.compo.service.*;
+
 
 public class PropertyPanel 
 extends Panel 
@@ -20,7 +22,6 @@ implements ActionListener, ItemListener, KeyListener
     private Choice [] types;
     private boolean allow_update;
     private Label msg, name, dx, dy;
-    private Button remove, hide;
     
     public PropertyPanel(MainWindow mw)
     {
@@ -30,7 +31,6 @@ implements ActionListener, ItemListener, KeyListener
         
         setLayout(new BorderLayout());        
         add(name = new Label("Properties", Label.CENTER), BorderLayout.NORTH);
-        add(new FilePanel(mw), BorderLayout.SOUTH);
     
         this.p = new Panel(new StackLayout(4, 8) );
         add(p, BorderLayout.CENTER);
@@ -62,48 +62,23 @@ implements ActionListener, ItemListener, KeyListener
             }
             p.add(p2);            
         }
-        
-        final Label l1 = new Label("Control", Label.CENTER);
-        l1.setForeground(Color.RED);
-        l1.setBackground(Color.LIGHT_GRAY);
-        p.add(l1);
-        
-        Panel p0 = new Panel(new GridLayout(1, 2, 12, 12));
-        p.add(p0);
-        p0.add(remove = new Button("Remove"));
-        p0.add(hide = new Button("Hide"));
+                
         
         regionChanged();
         
         // for(TextField tf : texts) tf.addTextListener(this);
         for(TextField tf : texts) tf.addKeyListener(this);
         for(Choice c : types) c.addItemListener(this);
-        this.allow_update = true;
-        
-        remove.addActionListener(this);
-        hide.addActionListener(this);
+        this.allow_update = true;        
     }
     
     // 
     public void actionPerformed(ActionEvent e)
     {
-        if(Database.current_region == null) return;
-        
-        
+        if(Database.current_region == null) return;        
         final Object src = e.getSource();        
-                
-        if(src == hide) {
-            final int len = Math.min(32, Database.regions.size());
-            for(int i = 0; i < len ; i++) {
-                if(Database.regions.get(i).equals(Database.current_region))
-                   Database.regions_hidden ^= (1 << i);
-            }
-        } else if(src == remove) {
-            Database.regions.remove(Database.current_region);
-            Database.current_region = 
-                  Database.regions.size() > 0 ? 
-                  Database.regions.get(0) : null;
-        }
+        
+        // TODO...
         
         mw.everythingChanged();
     }
