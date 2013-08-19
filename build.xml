@@ -38,7 +38,7 @@
       <arg line="add Composition_lib.jar"/>
     </exec>        
     <exec executable="git" dir="${site}">
-      <arg line="commit Composition_lib.jar -m 'published from build.xml'"/>
+      <arg line="commit Composition_lib.jar -m 'published comp from build.xml'"/>
     </exec>        
     <exec executable="git" dir="${site}">
       <arg line="push"/>
