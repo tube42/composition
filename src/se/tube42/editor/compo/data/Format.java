@@ -41,4 +41,13 @@ public class Format
 
         return rd;
     }
+    
+    public void removeAnchorTarget(String name, int index)
+    {
+        for(String s : Database.regions) {
+            RegionData rd = regions.get(s);
+            if(rd != null)
+                rd.removeAnchorTarget(name, index);            
+        }
+    }
 }

@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 import se.tube42.editor.compo.*;
 import se.tube42.editor.compo.data.*;
+import se.tube42.editor.compo.service.*;
 
 
 public class EditCanvas 
@@ -20,6 +21,8 @@ implements MouseListener, MouseMotionListener
     private RegionData region;
     private Format format;
     private int [] font_add_x = null, font_add_y = null;
+    private int [] tmp = new int[4];
+    
     public EditCanvas(MainWindow mw)
     {
         this.mw = mw;        
@@ -87,7 +90,7 @@ implements MouseListener, MouseMotionListener
             region.values[2] = x;
             region.values[3] = y;
         }
-        mw.regionChanged();        
+        mw.propertyChanged();        
     }
     
     public void mouseClicked(MouseEvent e) { }        
@@ -115,8 +118,7 @@ implements MouseListener, MouseMotionListener
         if(format == null) return;
         x0 = (w - format.w) / 2;
         y0 = (h - format.h) / 2;
-        
-        
+                
         // draw the grid?
         if(Database.grid_show) {
             final int gsize = Database.grid_size;
@@ -182,8 +184,13 @@ implements MouseListener, MouseMotionListener
                 // draw the types 
                 g.setFont(UI.TYPE_FONT);
                 g.setColor(Color.BLACK);
-                for(int j = 0; j < 4; j++)
-                    draw_type(g, j, r.types[j], x0 + x1, y0 + y1, x2 - x1, y2 - y1);            
+                
+                // draw anchors
+                draw_anchor_h(g, r, 0, x0 + x1, y0 + y1, x2 - x1, y2 - y1); 
+                draw_anchor_v(g, r, 1, x0 + x1, y0 + y1, x2 - x1, y2 - y1);            
+                draw_anchor_h(g, r, 2, x0 + x2, y0 + y1, x2 - x1, y2 - y1);            
+                draw_anchor_v(g, r, 3, x0 + x1, y0 + y2, x2 - x1, y2 - y1);            
+                
                 
             } else {
                 for(int j = -1; j < 2; j++)
@@ -192,7 +199,75 @@ implements MouseListener, MouseMotionListener
             
         }        
     }
+    
+    // --------------------------------
+    private static void get_anchor_position(int target, int w_, int h_, int [] points)
+    {
+        int x, y, w, h;
         
+        if(target == 0) {
+            x = y = 1;
+            w = w_-1;
+            h = h_-1;
+        } else if(target == 1) {
+            w = Database.current_format.w;
+            h = Database.current_format.h;
+            x = (w_ - w) / 2;
+            y = (h_ - h) / 2;                                    
+        } else {
+            final String name = Database.regions.get(target -2);
+            final RegionData r1 = Database.current_format.getRegion(name);
+            
+            final int dx = (w_ - Database.current_format.w) / 2;
+            final int dy = (h_ - Database.current_format.h) / 2;
+            x = r1.values[0] + dx;
+            y = r1.values[1] + dy;
+            w = r1.values[2] - r1.values[0];
+            h = r1.values[3] - r1.values[1];   
+        }        
+        
+        points[0] = x;
+        points[1] = y;
+        points[2] = w;
+        points[3] = h;                    
+    }    
+    
+    private void draw_anchor_v(Graphics g, RegionData r, int index,  int x, int y, int w, int h)
+    {
+        final int sw = getWidth();
+        final int sh = getHeight();        
+        final int target = r.targets[index];
+        final int type = r.types[index];
+        
+        get_anchor_position(target, sw, sh, tmp);        
+        
+        int x0 = x + w / 2 + (index == 3 ? + 2 : -2);
+        int y1 = (type == 1) ? tmp[1] + tmp[3] : tmp[1];
+        
+        g.drawLine( x0, y, x0, y1);
+        
+        g.fillOval(x0-3, y -3, 6, 6);
+        g.fillOval(x0-3, y1-3, 6, 6);
+        
+    }    
+    private void draw_anchor_h(Graphics g, RegionData r, int index, int x, int y, int w, int h)
+    {
+        final int sw = getWidth();
+        final int sh = getHeight();        
+        final int target = r.targets[index];
+        final int type = r.types[index];
+        
+        get_anchor_position(target, sw, sh, tmp);        
+        
+        int y0 = y + h / 2 + (index == 0 ? + 2 : -2);
+        int x1 = (type == 1) ? tmp[0] + tmp[2] : tmp[0];
+        g.drawLine( x, y0, x1, y0);
+        
+        g.fillOval(x -3, y0-3, 6, 6);
+        g.fillOval(x1-3, y0-3, 6, 6);
+        
+    }    
+    
     private void draw_type(Graphics g, int n, int type, int x, int y, int w, int h)
     {
         x -= font_add_x[type];

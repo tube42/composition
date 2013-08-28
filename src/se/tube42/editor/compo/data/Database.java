@@ -29,9 +29,12 @@ public class Database
     
     /** name of types */
     public static final String [] TYPES = {
+        "Point 1", "Point 2"
+        /*
         "PLAIN", "RATIO", 
         "LOCK0-u", "LOCK1-u", "LOCK0-s", "LOCK1-s",
-        "SAME", "SAME-c", "MIN", "MIN-C", "MAX", "MAX-c"
+           "SAME", "SAME-c", "MIN", "MIN-C", "MAX", "MAX-c"
+         */
     };
     
     /** list of all Regions */

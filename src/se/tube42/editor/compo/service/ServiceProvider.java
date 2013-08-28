@@ -89,7 +89,7 @@ public class ServiceProvider
     }
     
     // FORMAT
-    public static void hideCurrentFormat()
+    public static void toggleCurrentFormat()
     {
         if(Database.current_format != null)
             Database.current_format.enabled ^= true;            
@@ -167,7 +167,7 @@ public class ServiceProvider
         }
     }
     
-    public static void hideCurrentRegion()
+    public static void toggleCurrentRegion()
     {
         final int len = Math.min(32, Database.regions.size());
         for(int i = 0; i < len ; i++) {
@@ -176,8 +176,22 @@ public class ServiceProvider
         }        
     }
     
+    // this indicates that 
+    public static void removeAnchorTarget(String name, int index)
+    {
+        for(Format f : Database.FORMATS) {
+            f.removeAnchorTarget(name, index);
+        }
+    }
+    
     public static void removeCurrentRegion()
     {
+        int n = getCurrentRegionIndex();
+        if(n == -1) return;
+        
+        // replace the 
+        removeAnchorTarget(Database.current_region, n);
+        
         Database.regions.remove(Database.current_region);
         Database.current_region = 
               Database.regions.size() > 0 ? 
@@ -197,6 +211,6 @@ public class ServiceProvider
         }
         
         return -1;
-    }    
+    }
     
 }

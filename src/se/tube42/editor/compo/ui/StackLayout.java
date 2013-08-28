@@ -6,12 +6,19 @@ import java.awt.event.*;
 
 public class StackLayout implements LayoutManager
 {
-    private int vgap, hgap;
-    
+    private int vgap, hgap, div;
     public StackLayout(int vgap, int hgap)
     {
         this.vgap = vgap;
         this.hgap = hgap;
+        this.div = 1;
+    }
+    
+    public StackLayout(int vgap, int hgap, int div)
+    {
+        this.vgap = vgap;
+        this.hgap = hgap;
+        this.div = Math.max(1, div);
     }
     
     // 
@@ -31,11 +38,13 @@ public class StackLayout implements LayoutManager
         
         for(int i = 0 ; i < len ; i++) {
             final Component m = parent.getComponent(i);
-            final Dimension d = m.getPreferredSize();
+            if(!m.isVisible()) continue;
+            
+            final Dimension d = m.getPreferredSize();            
             w = Math.max(w, d.width);
             h += d.height;
         }
-        return new Dimension(2 * hgap + w, h + len * vgap);
+        return new Dimension((div + 1) * hgap + w * div, h + len * vgap);
     }
     
     public Dimension minimumLayoutSize(Container parent)
@@ -46,18 +55,23 @@ public class StackLayout implements LayoutManager
     public void layoutContainer(Container parent)
     {
         final int len = parent.getComponentCount();
-        final int w = parent.getWidth() - 2 * hgap;
+        final int w = (parent.getWidth() - (1 + div) * hgap) / div;
         int y = vgap;
-
+        int cnt = 0;
+        
+        
         for(int i = 0 ; i < len ; i++) {
             final Component m = parent.getComponent(i);
             if(!m.isVisible()) continue;
             
             final Dimension d = m.getPreferredSize();
-            m.setSize(w, d.height);        
-            m.setLocation(hgap, y);
             
-            y += d.height + vgap;
+            m.setSize(w , d.height);        
+            m.setLocation((hgap + w) * cnt , y);
+            cnt = (cnt + 1) % div;
+            if(cnt == 0)
+                y += d.height + vgap;
+                
         }
     }
 

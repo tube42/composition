@@ -26,12 +26,14 @@ implements ActionListener, ItemListener
         region_list = new List();
         region_list.setFont( UI.LIST_FONT);        
         region_list.addItemListener(this);
+        region_list.addActionListener(this);
         add(region_list, BorderLayout.CENTER);
         
-        Panel p1 = new Panel(new FlowLayout(FlowLayout.LEFT));
+//        Panel p1 = new Panel(new FlowLayout(FlowLayout.LEFT));
+        Panel p1 = new Panel(new BorderLayout(2, 2));
         add(p1, BorderLayout.SOUTH);
-        p1.add(region_name = new TextField("region1", 12));
-        p1.add(region_add = new Button("Add"));                        
+        p1.add(region_name = new TextField("region1", 12), BorderLayout.CENTER);
+        p1.add(region_add = new Button("   Add   "), BorderLayout.EAST);
         region_add.addActionListener(this);
         update_list();
     }
@@ -44,18 +46,21 @@ implements ActionListener, ItemListener
     public void actionPerformed(ActionEvent e)
     {
         final Object src = e.getSource();
+        
         if(src == region_add) {           
             final String name = region_name.getText();
             region_add(name);
-        }                        
+        } else if(src == region_list) {
+            ServiceProvider.toggleCurrentRegion();
+            mw.formatChanged();                    
+        }
     }
     
     public void itemStateChanged(ItemEvent e)
     {
         int n = region_list.getSelectedIndex(); // remember what was selected        
         Database.current_region = (n == -1) ? null : Database.regions.get(n);
-        mw.regionChanged();
-        
+        mw.regionChanged();        
     }
     
     private void region_add(String name)
@@ -65,7 +70,8 @@ implements ActionListener, ItemListener
         Database.current_region = name;
         Database.regions.add(name);
         update_list(); 
-        mw.regionChanged();       
+        
+        mw.everythingChanged();            
     }
     
     private void select_region(int index)

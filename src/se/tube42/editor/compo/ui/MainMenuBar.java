@@ -94,11 +94,11 @@ implements ActionListener
         } else if(src == exit) {
             System.exit(0);
         } else if(src == fhide) {
-            ServiceProvider.hideCurrentFormat();                        
+            ServiceProvider.toggleCurrentFormat();                        
         } else if(src == fclear) {
             ServiceProvider.clearCurrentFormat();                        
         } else if(src == ehide) {
-            ServiceProvider.hideCurrentRegion();            
+            ServiceProvider.toggleCurrentRegion();            
         } else if(src == eremove) {
             ServiceProvider.removeCurrentRegion();
         } else if(src == ecenter_v) {

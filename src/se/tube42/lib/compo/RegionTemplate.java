@@ -4,6 +4,11 @@ package se.tube42.lib.compo;
 public class RegionTemplate
 {
     public static final int
+          TYPE_P0 = 0,
+          TYPE_P1 = 1
+          ;
+    
+    public static final int
           TYPE_PLAIN = 0,
           TYPE_RATIO = 1,
           TYPE_LOCK0_U = 2,

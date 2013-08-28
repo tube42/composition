@@ -9,7 +9,7 @@ import se.tube42.editor.compo.service.*;
 
 public class FormatPanel 
 extends Panel 
-implements ItemListener
+implements ItemListener, ActionListener
 {
     private MainWindow mw;    
     private List format_list;
@@ -26,6 +26,7 @@ implements ItemListener
         format_list = new List();
         format_list.setFont( UI.LIST_FONT);
         format_list.addItemListener(this);
+        format_list.addActionListener(this);
         add(format_list, BorderLayout.CENTER);
         update_list();                               
         
@@ -56,8 +57,7 @@ implements ItemListener
         // somehow we have selected a different format
         if(n < 0 || n >= Database.FORMATS.length || Database.FORMATS[n] != Database.current_format) {
             n = ServiceProvider.getCurrentFormatIndex();
-        }
-        
+        }        
         
         // select the previously selected one if possible
         format_list.select(n);
@@ -65,9 +65,19 @@ implements ItemListener
     
     public void itemStateChanged(ItemEvent e)
     {
-        int n = format_list.getSelectedIndex(); // remember what was selected        
+        final int n = format_list.getSelectedIndex(); // remember what was selected
         Database.current_format = (n == -1) ? null : Database.FORMATS[n];
         mw.formatChanged();        
     }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        final Object src = e.getSource();                
+        
+        if(src == format_list) {
+            ServiceProvider.toggleCurrentFormat();                        
+            mw.everythingChanged();                    
+        }
+    }    
 
 }

@@ -53,14 +53,13 @@ public class MainWindow extends Frame
     public void formatChanged()
     {
         if(rp != null) rp.dataChanged();
+        if(pp != null) pp.formatChanged();        
         regionChanged();
     }
     
     public void regionChanged()
     {
-        if(pp != null) pp.regionChanged();
-        propertyChanged();        
-        
+        if(pp != null) pp.regionChanged();        
         if(mb != null) mb.stateChanged();
         
         setTitle(
@@ -69,10 +68,12 @@ public class MainWindow extends Frame
                  + "    " +
                  (Database.current_region == null ? "-" : Database.current_region)
                  + "]");
+        propertyChanged();                
     }
     
     public void propertyChanged() 
     {
+        if(pp != null) pp.propertyChanged();                
         if(ew != null) ew.regionChanged();
     }
     
