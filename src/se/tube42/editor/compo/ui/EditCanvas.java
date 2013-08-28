@@ -9,7 +9,7 @@ import se.tube42.editor.compo.service.*;
 
 
 public class EditCanvas 
-extends Canvas
+extends DBCanvas
 implements MouseListener, MouseMotionListener
 {
     private static final int HANDLE = 12;
@@ -99,14 +99,9 @@ implements MouseListener, MouseMotionListener
     public void mouseMoved(MouseEvent e) { }
     
     
-    public void update(Graphics g)
-    {
-        paint(g);
-    }
-    
-    public void paint(Graphics g)
-    {
-        
+    public void bufferedPaint(Graphics g)
+    {        
+        // calc font metrics once
         calc_font_sizes(g);
         
         final int w = getWidth();

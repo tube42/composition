@@ -5,7 +5,7 @@ import java.awt.*;
 import se.tube42.lib.compo.*;
 
 public class TestCanvas 
-extends Canvas
+extends DBCanvas
 {
     Composition c;
     
@@ -13,13 +13,8 @@ extends Canvas
     {
         this.c = c;
     }
-    
-    public void update(Graphics g)
-    {
-        paint(g);
-    }
-    
-    public void paint(Graphics g)
+
+    public void bufferedPaint(Graphics g)
     {
         final int w = getWidth();
         final int h = getHeight();        
@@ -45,8 +40,7 @@ extends Canvas
         
         g.setColor(Color.GRAY);        
         g.drawRect( (w - w1) / 2, (h - h1) / 2, w1, h1);
-                  
-        
+                          
         // 
         final Region [] rs = c.getAll();
         for(int i = 0; i < rs.length; i++) {
@@ -56,8 +50,7 @@ extends Canvas
             final int y = r.getY();
             final int w2 = r.getW();
             final int h2 = r.getH();
-            
-            
+                        
             g.setColor( UI.REGION_COLORS[i % UI.REGION_COLORS.length]);
             
             for(int j = -1; j < 2; j++)
