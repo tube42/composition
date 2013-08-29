@@ -81,12 +81,12 @@ implements ActionListener
         if(src == new_) {
             ServiceProvider.newDocument();
         } else if(src == save_as) {
-            String filename = Database.filename;
-            if(filename == null)
-                filename = get_filename(true);            
-            ServiceProvider.save(filename);
+            String filename = get_filename(true);            
+            if(filename != null)
+                ServiceProvider.save(filename);
         } else if(src == save) {
-            ServiceProvider.save(Database.filename);     
+            if(Database.filename != null)
+                ServiceProvider.save(Database.filename);     
         } else if(src == load) {
             String filename = get_filename(false);                        
             if(filename != null)

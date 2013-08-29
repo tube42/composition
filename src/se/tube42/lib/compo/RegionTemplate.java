@@ -7,22 +7,7 @@ public class RegionTemplate
           TYPE_P0 = 0,
           TYPE_P1 = 1
           ;
-    
-    public static final int
-          TYPE_PLAIN = 0,
-          TYPE_RATIO = 1,
-          TYPE_LOCK0_U = 2,
-          TYPE_LOCK1_U = 3,
-          TYPE_LOCK0_S = 4,
-          TYPE_LOCK1_S = 5,
-          TYPE_SAME    = 6,
-          TYPE_SAME_C  = 7,
-          TYPE_MIN     = 8,
-          TYPE_MIN_C   = 9,
-          TYPE_MAX     = 10,
-          TYPE_MAX_C   = 11
-          ;
-    
+        
     private static int [] tmp = new int[4];
     private int [] values;
     private int types, flags;

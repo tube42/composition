@@ -204,15 +204,12 @@ implements ActionListener, ItemListener, KeyListener
     
     private boolean copy_data(boolean from_ui)
     {
-        try {
-        
+        try {        
             final Format f = Database.current_format;
-            final String rname = Database.current_region;
-            
+            final String rname = Database.current_region;            
             
             if(f == null || rname == null) return false;
             final RegionData rd = f.getRegion(rname);
-            
             
             if(from_ui) {
                 for(int i = 0; i < 4; i++) {

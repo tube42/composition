@@ -7,22 +7,26 @@ import se.tube42.lib.compo.*;
 import se.tube42.editor.compo.data.*;
 
 
+
+
 /**
  * This class creates a binary compo bundle.
  * Rhe corresponding reader class is in the main library
  */
 public class CompositionWriter
 {
-    private OutputStream os;
+    private DataOutputStream os;
+    
     public CompositionWriter(OutputStream os)
     {
-        this.os = os;
+        this.os = new DataOutputStream(os);
     }
     
     
     public void write()
           throws IOException
-    {        
+    {
+                
         try {
             final ArrayList<Format> formats = get_enabled_formats();
             final ArrayList<String> regions = Database.regions;
@@ -32,50 +36,38 @@ public class CompositionWriter
             
             // write header
             os.write(CompositionReader.FILE_HEADER);
-            writeShort(CompositionReader.FILE_VERSION);
+            os.writeShort(CompositionReader.FILE_VERSION);
             
             // write sizes and names
-            writeShort(formats.size());        
-            writeShort(regions.size());
+            os.writeShort(formats.size());        
+            os.writeShort(regions.size());
             
-            writeInt(Database.regions_hidden);
-            writeInt(0); // reserver
+            os.writeInt(Database.regions_hidden);
+            os.writeInt(0); // reserved
             
-            for(Format f : formats) writeString(f.name);
-            for(String s : regions) writeString(s);
+            for(Format f : formats) os.writeUTF(f.name);
+            for(String s : regions) os.writeUTF(s);
             
             // now save the data
-            for(Format f : formats) save_format(f, regions);
+            for(Format f : formats) {
+                os.writeShort(f.w);
+                os.writeShort(f.h);
+                
+                for(String r : regions) {
+                    os.writeInt( f.getRegion(r).flags);
+                    os.writeInt(0); // reserved
+                }
+                
+                AnchorSequence as = new AnchorSequence();
+                as.build(f, regions);
+                as.save(f, os);
+            }                
         } finally {
             os.flush();
             os.close();
         }
     }
-    
-    private void writeShort(int n)
-          throws IOException
-    {
-        os.write( (n >> 8) & 0xFF);
-        os.write( (n >> 0) & 0xFF);
-    }
-    private void writeInt(int n)
-          throws IOException
-    {
-        os.write( (n >> 24) & 0xFF);
-        os.write( (n >> 16) & 0xFF);
-        os.write( (n >>  8) & 0xFF);
-        os.write( (n >>  0) & 0xFF);
-    }
-    
-    private void writeString(String s)
-          throws IOException
-    {
-        final int len = s.length();
-        writeShort(len);
-        for(int i = 0; i < len; i++)
-            os.write( (int)s.charAt(i));
-    }
-    
+        
     private ArrayList<Format> get_enabled_formats()
     {
         ArrayList<Format> ret = new ArrayList<Format>();
@@ -83,30 +75,5 @@ public class CompositionWriter
             if(f.enabled)
                 ret.add(f);
         return ret;
-    }
-    
-    private void save_format(final Format f, final ArrayList<String> rs)
-          throws IOException
-    {
-        // writeString(f.name);
-        writeShort(f.w);
-        writeShort(f.h);
-        for(String name : rs) {
-            final RegionData r = f.getRegion(name);
-            save_region( r);
-        }
-    }
-    private void save_region(final RegionData r)
-          throws IOException
-    {
-        int types = 0;
-        for(int i = 0; i < 4; i++)
-            types |= r.types[i] << (i * 4);
-        
-        for(int i = 0; i < 4; i++)
-            writeShort( r.values[i]);
-        
-        writeInt(types);
-        writeInt(r.flags);
-    }    
+    }        
 }

@@ -13,11 +13,11 @@ import se.tube42.editor.compo.data.*;
  */
 public class CompositionReader2
 {
-    private InputStream is;
+    private DataInputStream is;
     
     public CompositionReader2(InputStream is)
     {
-        this.is = is;
+        this.is = new DataInputStream(is);
     }
     
     
@@ -30,28 +30,27 @@ public class CompositionReader2
             if(b != c) throw new IOException("Format error (header)");
         }
         
-        if(readShort() != CompositionReader.FILE_VERSION) 
+        if(is.readShort() != CompositionReader.FILE_VERSION) 
             throw new IOException("Format error (version)");
         
         // read names
-        final int fcnt = readShort();        
-        final int rcnt = readShort();
+        final int fcnt = is.readShort();        
+        final int rcnt = is.readShort();
         
         // other data
-        Database.regions_hidden = readInt();
-        final int reserved = readInt(); // not used
+        Database.regions_hidden = is.readInt();
+        final int reserved = is.readInt(); // not used
         
         // get the strings
         ArrayList<String> fnames = new ArrayList<String>();
         ArrayList<String> rnames = new ArrayList<String>();
-        for(int i = 0; i < fcnt; i++) fnames.add(readString());
-        for(int i = 0; i < rcnt; i++) rnames.add(readString());
+        for(int i = 0; i < fcnt; i++) fnames.add(is.readUTF());
+        for(int i = 0; i < rcnt; i++) rnames.add(is.readUTF());
         
         // ...
         HashMap<String, Format> fmap = new HashMap<String, Format>();        
         
-        Database.regions.clear();        
-        for(String rn : rnames) Database.regions.add( rn);
+        Database.regions = rnames;
         
         for(Format f : Database.FORMATS) {
             fmap.put(f.name, f);
@@ -63,53 +62,17 @@ public class CompositionReader2
             if(f == null) new Format("dummy", 1, 1, true); // avoid crash            
             f.enabled = true;
             
-            int w = readShort();
-            int h = readShort();
+            int w = is.readShort();
+            int h = is.readShort();            
             
-            for(String m : rnames) {
-                RegionData r = f.getRegion(m);
-                
-                for(int k = 0; k < 4; k++) r.values[k] = readShort();
-                int t = readInt();
-                for(int k = 0; k < 4; k++) {
-                    r.types[k] = t & 0xF;
-                    t >>= 4;
-                }
-                r.flags = readInt();                
+            for(String r : rnames) {
+                f.getRegion(r).flags = is.readInt();
+                is.readInt(); // reserved
             }
+            
+            AnchorSequence as = new AnchorSequence();
+            as.load(is, rcnt);              
+            as.populate(f, rnames);
         }
-    }
-    
-    // ----------------------------------------------
-    private int readShort()
-          throws IOException
-    {
-        int ret = 0;
-        for(int i = 0; i < 2; i++)
-            ret = (ret << 8) | (is.read() & 0xFF);
-        
-        // sign extend?
-        if( (ret & 0x8000) != 0) ret |= 0xFFFF0000;        
-        return ret;        
-    }
-    private int readInt()
-          throws IOException          
-    {
-        int ret = 0;
-        for(int i = 0; i < 4; i++)
-            ret = (ret << 8) | (is.read() & 0xFF);
-        
-        return ret;        
-    }    
-    private String readString()
-          throws IOException          
-    {
-        int n = readShort();
-        byte [] x = new byte[n];
-        
-        is.read(x);
-        String s = new String(x);
-        
-        return s;
     }
 }
