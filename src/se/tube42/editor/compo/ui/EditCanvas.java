@@ -237,7 +237,7 @@ implements MouseListener, MouseMotionListener
         get_anchor_position(target, sw, sh, tmp);        
         
         int x0 = x + w / 2 + (index == 3 ? + 2 : -2);
-        int y1 = (type == 1) ? tmp[1] + tmp[3] : tmp[1];
+        int y1 = (type == RegionData.TYPE_P1) ? tmp[1] + tmp[3] : tmp[1];
         
         g.drawLine( x0, y, x0, y1);
         

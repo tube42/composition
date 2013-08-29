@@ -63,7 +63,7 @@ public class AnchorSequence
                 final int target = child.targets[j];
                 final int type = child.types[j];                
                 final int index2 = 4 * target + (j & 1) 
-                      + (type == RegionTemplate.TYPE_P0 ? 0 : 2);
+                      + (type == RegionData.TYPE_P0 ? 0 : 2);
                 
                 if(index1 == index2)
                     throw new IOException("Bad anchor in " + child.getName() );

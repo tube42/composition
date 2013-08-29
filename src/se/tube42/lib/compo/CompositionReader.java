@@ -17,11 +17,11 @@ public class CompositionReader
     };
     
     
-    private InputStream is;
+    private DataInputStream is;
     
     /* package */ CompositionReader(InputStream is)
     {
-        this.is = is;
+        this.is = new DataInputStream(is);
     }
     
     /* package */ Composition read()
@@ -33,75 +33,48 @@ public class CompositionReader
             byte c = (byte) is.read();
             if(b != c) throw new IOException("Format error (header)");
         }
-        if(readShort() != CompositionReader.FILE_VERSION) 
+        if(is.readShort() != CompositionReader.FILE_VERSION) 
             throw new IOException("Format error (version)");
         
         // read names
-        final int formats_cnt = readShort();        
-        final int regions_cnt = readShort();
+        final int formats_cnt = is.readShort();        
+        final int regions_cnt = is.readShort();
         
-        final int dummy1 = readInt(); // not used
-        final int dummy2 = readInt(); // not used
+        final int dummy1 = is.readInt(); // not used
+        final int dummy2 = is.readInt(); // not used
         
         final String [] formats_names = new String[formats_cnt];
         final String [] regions_names = new String[regions_cnt];
-        for(int i = 0; i < formats_cnt; i++) formats_names[i] = readString();        
-        for(int i = 0; i < regions_cnt; i++) regions_names[i] = readString();
+        for(int i = 0; i < formats_cnt; i++) formats_names[i] = is.readUTF();        
+        for(int i = 0; i < regions_cnt; i++) regions_names[i] = is.readUTF();
         
         // read values etc
         FormatTemplate [] formats = new FormatTemplate[formats_cnt];
         int [] tmp = new int[4];
         for(int i = 0; i < formats_cnt; i++) {
-            int w = readShort();
-            int h = readShort();
+            int w = is.readShort();
+            int h = is.readShort();
             
-            RegionTemplate [] regions = new RegionTemplate[regions_cnt];
-            for(int j = 0; j < regions_cnt; j++) {
-                regions[j] = new RegionTemplate();
-                
-                for(int k = 0; k < 4; k++) tmp[k] = readShort();
-                int t = readInt();
-                int f = readInt();                
-                regions[j].set(tmp,  t, f);
+            // get flags
+            int [] rflags = new int[regions_cnt];
+            for(int j = 0; j < rflags.length; j++) {
+                rflags[j] = is.readInt();
+                is.readInt(); // reserved                
             }
             
-            formats[i] = new FormatTemplate( formats_names[i], w, h, regions);
+            // get assignment list
+            int [] rassign = new int[(regions_cnt + 2) * 4 * 4]; // <index, target, diff, value>
+            for(int j = 8 * 4; j < rassign.length; j += 4) {
+                rassign[j + 0] = (int) is.readShort();
+                rassign[j + 1] = (int) is.readShort();
+                rassign[j + 2] = (int) is.readShort();
+            }
+                        
+            formats[i] = new FormatTemplate( formats_names[i], w, h, rflags, rassign);
         }
         
         Composition comp = new Composition(formats, regions_names);        
         return comp;
     }
     
-    // ----------------------------------------------
-    private int readShort()
-          throws IOException
-    {
-        int ret = 0;
-        for(int i = 0; i < 2; i++)
-            ret = (ret << 8) | (is.read() & 0xFF);
-        
-        // sign extend?
-        if( (ret & 0x8000) != 0) ret |= 0xFFFF0000;        
-        return ret;        
-    }
-    private int readInt()
-          throws IOException          
-    {
-        int ret = 0;
-        for(int i = 0; i < 4; i++)
-            ret = (ret << 8) | (is.read() & 0xFF);
-        
-        return ret;        
-    }    
-    private String readString()
-          throws IOException          
-    {
-        int n = readShort();
-        byte [] x = new byte[n];
-        
-        is.read(x);
-        String s = new String(x);
-        
-        return s;
-    }
 }

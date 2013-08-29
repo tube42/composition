@@ -5,6 +5,11 @@ package se.tube42.editor.compo.data;
  */
 public class RegionData
 {   
+    public static final int
+          TYPE_P0 = 0,
+          TYPE_P1 = 1
+          ;
+    
     public int []values;
     public int []types;
     public int []targets;
