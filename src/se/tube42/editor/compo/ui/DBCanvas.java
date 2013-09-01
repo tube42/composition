@@ -38,16 +38,20 @@ public abstract class DBCanvas extends Canvas
         final int w_ = getWidth();
         final int h_ = getHeight();
         
-        if(image == null || w_ != w || h_ != h)
+        if(image == null || w_ > w || h_ > h)
             create_buffer(w_, h_);
         
         bufferedPaint(g);
-        g_.drawImage(image, 0, 0, this);
+        g_.drawImage(image, 0, 0, w_, h_, 0, 0, w_, h_, this);
     }
     
     
     private void create_buffer(int w, int h)
     {
+        
+        // give it some extra space (in case resized)
+        w += 64;
+        h += 64;
         
         if(g != null) {
             g.dispose();

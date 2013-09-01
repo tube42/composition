@@ -14,7 +14,11 @@
   
   <target name="dist" depends="compile" >
     <jar jarfile="Composition_lib.jar" basedir="${build}" includes="se/tube42/lib/**" />
-    <jar jarfile="Composition_app.jar" basedir="${build}">
+    
+    <jar jarfile="Composition_app.jar">
+      <fileset dir="${build}"/>
+      <fileset dir="res"/>
+      
       <manifest>
         <attribute name="Main-Class" value="se.tube42.editor.compo.Main"/>
       </manifest> 
@@ -24,6 +28,8 @@
   <target name="editor" depends="compile" >
     <java classname="se.tube42.editor.compo.Main" fork="yes">
       <classpath path="${build}"/>      
+      <classpath path="res"/>      
+      
     </java>
   </target>
       

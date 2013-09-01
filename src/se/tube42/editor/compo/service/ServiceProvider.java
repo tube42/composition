@@ -73,4 +73,9 @@ public class ServiceProvider
         return RegionService.getCurrentRegionIndex();
     }
     
+    public static RegionData getRegion(int index)
+    {
+        return RegionService.getRegion(index);
+    }
+    
 }

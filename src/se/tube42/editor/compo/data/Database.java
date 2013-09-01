@@ -37,8 +37,12 @@ public class Database
          */
     };
     
+    
     /** list of all Regions */
     public static ArrayList<String> regions = new ArrayList<String>();
+    
+    public static RegionData rscreen = new RegionData("_screen");
+    public static RegionData rformat = new RegionData("_format");
     
     public static int regions_hidden  = 0;
     

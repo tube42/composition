@@ -9,6 +9,17 @@ import se.tube42.editor.compo.io.*;
 /* package */ class RegionService
 {    
     
+    /* package */ static RegionData getRegion(int index)
+    {        
+        if(index == 0) return Database.rscreen;
+        if(index == 1) return Database.rformat;
+        
+        if(Database.current_format == null) return null;
+        return Database.current_format.getRegion(
+                  Database.regions.get(index -2)
+                  );        
+    }
+    
     /* package */ static RegionData createNewRegion(Format f, String rname)
     {
         if(f.contains(rname)) return null;
