@@ -67,9 +67,22 @@ package se.tube42.lib.compo;
         // update size and set flags
         for(int i = 0; i < regions_.length; i++) {
             regions_[i].flags = rflags[i];
+            
+            if(flip_v) {
+                final int y = regions_[i].y;
+                regions_[i].y = rh - regions_[i].h;
+                regions_[i].h = rh - y;
+            }
+            if(flip_h) {
+                final int x = regions_[i].x;
+                regions_[i].x = rw - regions_[i].w;
+                regions_[i].w = rw - x;
+            }
+            
             regions_[i].w -= regions_[i].x; // from (x0, x1) to (x0, w)
-            regions_[i].h -= regions_[i].y; // from (y0, y1) to (y0, h)
-        }
+            regions_[i].h -= regions_[i].y; // from (y0, y1) to (y0, h)            
+        }            
+        
     }
     
     
