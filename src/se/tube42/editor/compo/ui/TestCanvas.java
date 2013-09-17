@@ -7,8 +7,7 @@ import se.tube42.lib.compo.*;
 public class TestCanvas 
 extends DBCanvas
 {
-    Composition c;
-    
+    private Composition c;
     public TestCanvas(Composition c)
     {
         this.c = c;

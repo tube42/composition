@@ -12,6 +12,7 @@ implements ItemListener
 {
     private TestCanvas canvas;
     private Checkbox flipv, fliph;
+    private Choice scalet;
     private Composition compo;
     
     public TestWindow(Composition c)
@@ -26,9 +27,17 @@ implements ItemListener
         add(p, BorderLayout.NORTH);
         p.add(fliph = new Checkbox("Flip horizontal"));
         p.add(flipv = new Checkbox("Flip vertical"));
+        p.add(new Label("  Scale type"));
+        p.add(scalet = new Choice());
         
         fliph.addItemListener(this);
         flipv.addItemListener(this);
+        scalet.addItemListener(this);
+        
+        scalet.add("None");
+        scalet.add("Power of two");
+        scalet.add("Any");
+        scalet.select(0);
         
         // Frame stuff        
         final WindowAdapter wc = new WindowAdapter() {
@@ -40,6 +49,8 @@ implements ItemListener
         addWindowListener(wc);                        
         setSize(500, 500);
         setVisible(true);
+        
+        set();
     }
     
     public void update(Graphics g)
@@ -48,10 +59,15 @@ implements ItemListener
     }
     
     public void itemStateChanged(ItemEvent e)
-    {        
-        compo.flip(fliph.getState(), flipv.getState());
-        compo.resize(canvas.getWidth(), canvas.getHeight());
-        canvas.repaint();
+    {
+        set();
+        canvas.repaint();                
     }
     
+    private void set()
+    {
+        compo.configure(fliph.getState(), flipv.getState(), 
+                  scalet.getSelectedIndex());        
+        compo.resize(canvas.getWidth(), canvas.getHeight());
+    }        
 }

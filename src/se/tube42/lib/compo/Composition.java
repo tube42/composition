@@ -5,8 +5,14 @@ import java.io.*;
 
 public class Composition
 {
-    private int w, h, scale;
+    /** how to scale templates when resizing */
+    public static final int
+          SCALE_NONE = 0,
+          SCALE_POW2 = 1,
+          SCALE_ANY = 2
+          ;
     
+    private int w, h, scale, scale_type;
     private FormatTemplate [] format_templates;
     private Region [] regions;
     private FormatTemplate current_format;        
@@ -32,6 +38,7 @@ public class Composition
         this.w = -1;
         this.h = -1;
         this.scale = 1;
+        this.scale_type = SCALE_ANY;
         
         this.flip_h = false;
         this.flip_v = false;
@@ -68,13 +75,15 @@ public class Composition
     public int getScale() { return scale; }
     
     /**
-     * flips regions in horizontal and/or vertical axis
+     * set flipping and scaling configuration
      */
-    public void flip(boolean flip_h, boolean flip_v)
+    public void configure(boolean flip_h, boolean flip_v, int scale_type)
     {
-        if(this.flip_h != flip_h || this.flip_v != flip_v) {
+        if(this.flip_h != flip_h || this.flip_v != flip_v || 
+           this.scale_type != scale_type) {
             this.flip_h = flip_h;
             this.flip_v = flip_v;
+            this.scale_type = scale_type;
             
             // this will force a resize            
             w = -1; 
@@ -104,10 +113,10 @@ public class Composition
         }
         return false;
     }
-    
+        
     /**
      * choose a template based on the screen size
-     */
+     */    
     public boolean resize(int w, int h)
     {
         if(this.w == w && this.h == h) return true;        
@@ -115,7 +124,7 @@ public class Composition
         FormatTemplate best_format = null;
         int best_err = 0;
         int best_scale = 1;
-        for(int scale = 1; scale < 8; scale ++) {
+        for(int scale = 1; scale < 8; ) {
             for(FormatTemplate st : format_templates) {                
                 int err = st.cost(w, h, scale) + scale;
                 if(best_format == null || err < best_err) {
@@ -124,13 +133,17 @@ public class Composition
                     best_scale = scale;
                 }
             }
+            
+            if(scale_type == SCALE_NONE) scale = 100000;
+            else if(scale_type == SCALE_POW2) scale *= 2;
+            else scale++;
         }
         
         if(best_format == null) 
             return false;
                 
         this.w = w;
-        this.h = h;        
+        this.h = h;
         set_format(best_format, best_scale);        
         return true;
     }    

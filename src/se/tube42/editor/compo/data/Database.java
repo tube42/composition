@@ -13,6 +13,15 @@ public class Database
     /** list of all available formats */
     public static final Format [] FORMATS = 
     {
+        new Format("2600", 192, 160, true),
+        new Format("fruit/4", 120, 80, true),
+        new Format("fruit/4", 120, 80, false),        
+        new Format("fruit/2", 240, 160, true),
+        new Format("fruit/2", 240, 160, false),
+        new Format("ZX", 256, 192, true),        
+        new Format("NES", 256, 240, true),        
+        new Format("QVGA", 240, 320, true),
+        new Format("QVGA", 240, 320, false),        
         new Format("QVGA", 240, 320, true),
         new Format("QVGA", 240, 320, false),
         new Format("HVGA", 320, 480, true),
