@@ -42,10 +42,15 @@ public class ServiceProvider
         FormatService.clearCurrentFormat();
     }
     
-   public static int getCurrentFormatIndex()
+    public static int getCurrentFormatIndex()
     {
         return FormatService.getCurrentFormatIndex();
     }    
+    
+    public static void alignCurrentFormat()
+    {
+        FormatService.alignCurrentFormat();
+    }
     
     // REGION
     public static RegionData createNewRegion(Format f, String rname)

@@ -26,4 +26,25 @@ import se.tube42.editor.compo.data.*;
                 return i;
         return -1;
     }        
+    
+    /* package */ static void alignCurrentFormat()
+    {
+        final Format f = Database.current_format;
+        if(f == null)
+            return;
+        
+        final int align_size = 1 << Database.global_alignment;
+        final int align_mask = align_size - 1;
+        final int align_inv_mask = ~align_mask;
+        
+        for(String name : Database.regions) {
+            RegionData rd = f.getRegion(name);
+            
+            for(int i = 2; i < 4; i++)
+                rd.values[i] += align_mask;
+            
+            for(int i = 0; i < 4; i++)
+                rd.values[i] &= align_inv_mask;
+        }
+    }
 }

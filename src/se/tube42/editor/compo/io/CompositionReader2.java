@@ -39,7 +39,8 @@ public class CompositionReader2
         
         // other data
         Database.regions_hidden = is.readInt();
-        final int reserved = is.readInt(); // not used
+        final int global_flags = is.readInt();
+        Database.global_alignment = global_flags & 7;
         
         // get the strings
         ArrayList<String> fnames = new ArrayList<String>();

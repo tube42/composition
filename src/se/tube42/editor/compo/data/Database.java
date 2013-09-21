@@ -53,10 +53,12 @@ public class Database
     public static RegionData rscreen = new RegionData("_screen");
     public static RegionData rformat = new RegionData("_format");
     
-    public static int regions_hidden  = 0;
-    
     public static Format current_format = null;
     public static String current_region = null;
+    
+    // global flags:
+    public static int regions_hidden  = 0;
+    public static int global_alignment = 1;
     
     // editor grid format
     public static int grid_size = 12;

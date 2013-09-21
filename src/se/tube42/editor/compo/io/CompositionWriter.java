@@ -42,8 +42,10 @@ public class CompositionWriter
             os.writeShort(formats.size());        
             os.writeShort(regions.size());
             
-            os.writeInt(Database.regions_hidden);
-            os.writeInt(0); // reserved
+            os.writeInt(Database.regions_hidden);            
+            os.writeInt(
+                      (Database.global_alignment & 7)
+                      );
             
             for(Format f : formats) os.writeUTF(f.name);
             for(String s : regions) os.writeUTF(s);

@@ -40,8 +40,8 @@ public class CompositionReader
         final int formats_cnt = is.readShort();        
         final int regions_cnt = is.readShort();
         
-        final int dummy1 = is.readInt(); // not used
-        final int dummy2 = is.readInt(); // not used
+        final int hidden = is.readInt();
+        final int flags = is.readInt();
         
         final String [] formats_names = new String[formats_cnt];
         final String [] regions_names = new String[regions_cnt];
@@ -72,8 +72,8 @@ public class CompositionReader
                         
             formats[i] = new FormatTemplate( formats_names[i], w, h, rflags, rassign);
         }
-        
-        Composition comp = new Composition(formats, regions_names);        
+                
+        Composition comp = new Composition(formats, regions_names, flags);
         return comp;
     }
     

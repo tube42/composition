@@ -12,7 +12,7 @@ public class Composition
           SCALE_ANY = 2
           ;
     
-    private int w, h, scale, scale_type;
+    private int w, h, scale, scale_type, flags;
     private FormatTemplate [] format_templates;
     private Region [] regions;
     private FormatTemplate current_format;        
@@ -31,23 +31,24 @@ public class Composition
         }
     }
     
-    /* package */ Composition(FormatTemplate [] formats, String [] region_names)
+    /* package */ Composition(FormatTemplate [] formats, String [] region_names, int flags)
     {
         this.current_format = null;
         this.region_map = new HashMap<String,Region>();
+        this.flags = flags;
         this.w = -1;
         this.h = -1;
-        this.scale = 1;
-        this.scale_type = SCALE_ANY;
-        
-        this.flip_h = false;
-        this.flip_v = false;
+        this.scale = 1;        
         this.format_templates = formats;
+        
         this.regions = new Region[region_names.length];
         for(int i = 0; i < regions.length; i++) {
             regions[i] = new Region(region_names[i]);
             region_map.put(region_names[i], regions[i]);
         }
+        
+        configure(false, false, SCALE_ANY);
+        
     }
     
     // 
@@ -152,7 +153,7 @@ public class Composition
     {
         this.scale = scale;
         current_format = f;        
-        current_format.build(regions, this.w, this.h, scale, flip_h, flip_v);
+        current_format.build(regions, this.w, this.h, scale, flip_h, flip_v, flags);
         
         
     }

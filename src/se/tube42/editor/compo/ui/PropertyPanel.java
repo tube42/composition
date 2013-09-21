@@ -24,6 +24,8 @@ implements ActionListener, ItemListener, KeyListener
     private TabbedPanel p1;
     private TextField [] texts;
     private Choice [] targets, types;
+    private Choice alignment;
+    private Button alignment_force;
     private Label msg, name, dx, dy;
     private String [] target_names;
     
@@ -81,12 +83,23 @@ implements ActionListener, ItemListener, KeyListener
         texts[4] = add_edit(ps[2], "Flags", "0");
                         
         
+        add_header(ps[2], "Global parameters", "");
+        
         for(Choice type : types) {
             for(int j = 0; j < Database.TYPES.length; j++) 
                 type.add(Database.TYPES[j]);
             type.select(0);
         }
         
+        alignment = add_choice(ps[2], "Real-time alignment");
+        alignment.add("None");
+        for(int i = 1; i < 8; i++)
+            alignment.add("" + (1 << i) + " pixels");
+        
+        alignment_force = add_button(ps[2], "Set to RT value", "Editor alignment");
+        
+        
+        alignment.select(Database.global_alignment);
         p1.set(0);        
         regionChanged();        
         
@@ -94,10 +107,22 @@ implements ActionListener, ItemListener, KeyListener
         for(TextField tf : texts) tf.addKeyListener(this);
         for(Choice c : targets) c.addItemListener(this);
         for(Choice c : types) c.addItemListener(this);
+        
+        alignment.addItemListener(this);
+        alignment_force.addActionListener(this);
     }
     
     // ------------------------------------------------------
     // UI helpers
+    
+    private Button add_button(Panel p, String label, String text)
+    {    
+        Button b = new Button(label);
+        p.add(new Label(text == null ? "" : text, Label.RIGHT));
+        p.add(b);
+        return b;
+    }
+    
     private TextField add_edit(Panel p, String label, String data)
     {    
         TextField tf = new TextField(data, 20);        
@@ -130,7 +155,11 @@ implements ActionListener, ItemListener, KeyListener
     // ------------------------------------------------------
     public void actionPerformed(ActionEvent e)
     {
-        final Object src = e.getSource();                
+        final Object src = e.getSource();                        
+        
+        if(src == alignment_force) {
+            ServiceProvider.alignCurrentFormat();
+        }
         
         mw.everythingChanged();
     }
@@ -163,6 +192,7 @@ implements ActionListener, ItemListener, KeyListener
         p1.setEnabled(true);                
         name.setText("Properties for " + Database.current_region);                
     }
+    
     public void propertyChanged()
     {
         if(Database.current_region != null)
@@ -170,8 +200,12 @@ implements ActionListener, ItemListener, KeyListener
     }
     
     public void formatChanged()
-    {
+    {        
         update_targets();        
+        
+        // not really a format change, but this is how we detected 
+        // load() opetations
+        alignment.select(Database.global_alignment);        
     }
     
     // rebuilds target arrays
@@ -192,8 +226,11 @@ implements ActionListener, ItemListener, KeyListener
         }
     }
     
-    public void dataChanged()
+    
+    private void dataChanged()
     {                
+        Database.global_alignment = alignment.getSelectedIndex();
+        
         if(copy_data(false)) {
             msg.setText("");
             mw.propertyChanged();            

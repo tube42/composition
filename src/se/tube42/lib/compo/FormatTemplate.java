@@ -27,7 +27,8 @@ package se.tube42.lib.compo;
     public int getHeight() { return h; }
     public String getName() { return name; }
     
-    /* package */ void build(Region [] regions_, int rw, int rh, int scale, boolean flip_h, boolean flip_v)
+    /* package */ void build(Region [] regions_, int rw, int rh, int scale, 
+              boolean flip_h, boolean flip_v, int flags)
     {
         this.rw = rw;
         this.rh = rh;
@@ -77,12 +78,30 @@ package se.tube42.lib.compo;
                 final int x = regions_[i].x;
                 regions_[i].x = rw - regions_[i].w;
                 regions_[i].w = rw - x;
-            }
-            
-            regions_[i].w -= regions_[i].x; // from (x0, x1) to (x0, w)
-            regions_[i].h -= regions_[i].y; // from (y0, y1) to (y0, h)            
+            }            
         }            
         
+        
+        // update per global alignment
+        final int align_bits = flags & 7;
+        if(align_bits != 0) {
+            final int align_size = 1 << align_bits;
+            final int align_mask = align_size - 1;
+            final int align_inv_mask = ~align_mask;
+            
+            for(int i = 0; i < regions_.length; i++) {
+                regions_[i].x &= align_inv_mask;
+                regions_[i].y &= align_inv_mask;
+                regions_[i].w = (regions_[i].w + align_mask) & align_inv_mask;
+                regions_[i].h = (regions_[i].h + align_mask) & align_inv_mask;             
+            }
+        }
+        
+        // change from (P0, P1) to (P, delta)
+        for(int i = 0; i < regions_.length; i++) {
+            regions_[i].w -= regions_[i].x; // from (x0, x1) to (x0, w)
+            regions_[i].h -= regions_[i].y; // from (y0, y1) to (y0, h)                        
+        }
     }
     
     
