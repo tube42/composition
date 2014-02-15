@@ -46,8 +46,8 @@ package se.tube42.lib.compo;
         
         // assign sequence
         for(int i = 8 * 4; i < rassign.length; i += 4) {
-            final int target = map[rassign[i + 1]];
-            rassign[ i + 3] = rassign[ i + 2] + rassign[ target * 4 + 3];
+            final int target = map[rassign[i + 1]];            
+            rassign[ i + 3] = scale * rassign[ i + 2] + rassign[ target * 4 + 3];
         }        
                 
         // write to Region

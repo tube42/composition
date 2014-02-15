@@ -47,8 +47,7 @@ public class Composition
             region_map.put(region_names[i], regions[i]);
         }
         
-        configure(false, false, SCALE_ANY);
-        
+        configure(false, false, SCALE_ANY);        
     }
     
     // 
