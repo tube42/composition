@@ -21,7 +21,7 @@ public class RegionData
     {
         this.values = new int[] { 10, 10, 20, 20};
         this.types = new int[] {0, 0, 1, 1};
-        this.targets = new int[] {1, 1, 1, 1};
+        this.targets = new int[] {0, 0, 0, 0};
         this.flags = 0;
         this.name = name;
     }
