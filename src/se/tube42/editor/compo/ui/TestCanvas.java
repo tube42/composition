@@ -1,6 +1,7 @@
 package se.tube42.editor.compo.ui;
 
 import java.awt.*;
+import java.awt.geom.*;
 
 import se.tube42.lib.compo.*;
 
@@ -8,16 +9,32 @@ public class TestCanvas
 extends DBCanvas
 {
     private Composition c;
+    private AffineTransform at;
+    
     public TestCanvas(Composition c)
     {
         this.c = c;
+        this.at = new AffineTransform();        
     }
-
+    
+    public void setScale(double scale)
+    {
+        at.setToIdentity();
+        at.scale(scale, scale);
+        clearAll();        
+        repaint();        
+    }
+    
     public void bufferedPaint(Graphics g)
     {
-        final int w = getWidth();
-        final int h = getHeight();        
-                
+        final int w = (int)(getWidth() / at.getScaleX());
+        final int h = (int)(getHeight() / at.getScaleY());
+        
+        // scale and draw board
+	Graphics2D g2d = (Graphics2D)g;
+	g2d.setTransform(at);
+        
+        
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, w, h);
         

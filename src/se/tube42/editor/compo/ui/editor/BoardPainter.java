@@ -26,7 +26,6 @@ public class BoardPainter extends EditorControl
         x0 = (w - format.w) / 2;
         y0 = (h - format.h) / 2;
         
-                
         // draw the grid?
         if(Database.grid_show) {
             final int gsize = Database.grid_size;

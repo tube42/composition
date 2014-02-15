@@ -123,4 +123,11 @@ import se.tube42.editor.compo.io.*;
         return -1;
     }
     
+    /* package */ static void selectFirstRegion()
+    {
+        if(Database.regions.size() > 0)
+            Database.current_region = Database.regions.get(0);
+    }
+    
+    
 }

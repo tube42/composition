@@ -13,6 +13,15 @@ public class Database
     /** list of all available formats */
     public static final Format [] FORMATS = 
     {
+        new Format("N7", 1280, 768, true),
+        new Format("N7", 1280, 768, false),        
+        new Format("N5", 1920, 1080, true),
+        new Format("N5", 1920, 1080, false),        
+        new Format("N7-13", 1920, 1200, true),
+        new Format("N7-13", 1920, 1200, false),        
+        new Format("N10", 2560, 1600, true),
+        new Format("N10", 2560, 1600, false),
+        // ---
         new Format("2600", 192, 160, true),
         new Format("fruit/4", 120, 80, true),
         new Format("fruit/4", 120, 80, false),        
@@ -63,6 +72,7 @@ public class Database
     // editor grid format
     public static int grid_size = 12;
     public static boolean grid_enable = false, grid_show = true;
+    public static double scale = 1.0;
     
     // saving:
     public static String filename = null;

@@ -47,4 +47,15 @@ import se.tube42.editor.compo.data.*;
                 rd.values[i] &= align_inv_mask;
         }
     }
+    
+    /* package */ static void selectFirstFormat()
+    {
+        for(int i = 0; i < Database.FORMATS.length; i++) {
+            if(Database.FORMATS[i].enabled) {
+                Database.current_format = Database.FORMATS[i];
+                return;
+            }
+        }
+    }
+
 }

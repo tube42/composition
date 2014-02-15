@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import se.tube42.editor.compo.ui.*;
+import se.tube42.editor.compo.data.*;
 
 public class EditWindow extends Frame
 {
@@ -18,7 +19,12 @@ public class EditWindow extends Frame
         this.mw = mw;
         
         add(format = new EditFormat(mw), BorderLayout.NORTH);
-        add(canvas = new EditCanvas(mw), BorderLayout.CENTER);
+        // add(canvas = new EditCanvas(mw), BorderLayout.CENTER);
+        
+                
+        ScrollPane sp = new ScrollPane();
+        sp.add(canvas = new EditCanvas(mw));
+        add(sp, BorderLayout.CENTER);
         
         setSize(500, 700);
         setVisible(true);
@@ -27,6 +33,24 @@ public class EditWindow extends Frame
     public void update(Graphics g)
     {
         paint(g);
+    }
+    
+    public void formatChanged()
+    {
+        displayChanged();
+    }
+    
+    public void displayChanged()
+    {
+
+        canvas.displayChanged();
+        
+        // for the scroll pane
+        pack();
+        pack();
+        pack();
+        
+        regionChanged();
     }
     
     public void regionChanged()

@@ -17,7 +17,10 @@ public class ServiceProvider
     
     public static boolean load(String filename)
     {
-        return IOService.load(filename);
+        boolean ret = IOService.load(filename);
+        selectFirstFormat();
+        selectFirstRegion();
+        return ret;
     }
     
     // DOCUMENT
@@ -52,6 +55,12 @@ public class ServiceProvider
         FormatService.alignCurrentFormat();
     }
     
+    public static void selectFirstFormat()
+    {
+        FormatService.selectFirstFormat();
+    }
+    
+    
     // REGION
     public static RegionData createNewRegion(Format f, String rname)
     {
@@ -63,6 +72,11 @@ public class ServiceProvider
         RegionService.centerCurrentRegion(h, v);
     }        
     
+   public static void selectFirstRegion()
+    {
+        RegionService.selectFirstRegion();
+    }
+     
     public static void toggleCurrentRegion()
     {
         RegionService.toggleCurrentRegion();

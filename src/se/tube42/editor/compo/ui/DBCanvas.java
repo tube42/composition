@@ -33,6 +33,14 @@ public abstract class DBCanvas extends Canvas
         paint(g);
     }
     
+    public final void clearAll()
+    {
+        if(g != null && image != null) {            
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, w, h);
+        }
+    }
+    
     public final void paint(Graphics g_)
     {
         final int w_ = getWidth();

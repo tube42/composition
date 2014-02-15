@@ -54,6 +54,7 @@ public class MainWindow extends Frame
     {
         if(rp != null) rp.dataChanged();
         if(pp != null) pp.formatChanged();        
+        if(ew != null) ew.formatChanged();
         regionChanged();
     }
     
@@ -79,6 +80,7 @@ public class MainWindow extends Frame
     
     public void displayChanged()
     {
+        if(ew != null) ew.displayChanged();
         propertyChanged();
     }
     

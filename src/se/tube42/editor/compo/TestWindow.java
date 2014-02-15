@@ -12,8 +12,9 @@ implements ItemListener
 {
     private TestCanvas canvas;
     private Checkbox flipv, fliph;
-    private Choice scalet;
+    private Choice scalet, scale;
     private Composition compo;
+        
     
     public TestWindow(Composition c)
     {
@@ -30,9 +31,19 @@ implements ItemListener
         p.add(new Label("  Scale type"));
         p.add(scalet = new Choice());
         
+        
+        p.add(new Label("  Scale"));
+        p.add(scale = new Choice());
+        scale.add("1/1");
+        scale.add("1/2");
+        scale.add("1/4");
+        scale.add("1/8");
+        
+        
         fliph.addItemListener(this);
         flipv.addItemListener(this);
         scalet.addItemListener(this);
+        scale.addItemListener(this);
         
         scalet.add("None");
         scalet.add("Power of two");
@@ -57,7 +68,7 @@ implements ItemListener
     {
         paint(g);
     }
-    
+     
     public void itemStateChanged(ItemEvent e)
     {
         set();
@@ -69,5 +80,9 @@ implements ItemListener
         compo.configure(fliph.getState(), flipv.getState(), 
                   scalet.getSelectedIndex());        
         compo.resize(canvas.getWidth(), canvas.getHeight());
+        
+        // Set scale
+        double s = Math.pow(2, -scale.getSelectedIndex());
+        canvas.setScale(s);
     }        
 }
