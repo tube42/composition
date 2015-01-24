@@ -7,7 +7,7 @@ import se.tube42.editor.compo.data.*;
 import se.tube42.editor.compo.io.*;
 
 /* package */ class DocumentService
-{    
+{
     /* package */ static void newDocument()
     {
         boolean enabled = true;
@@ -20,27 +20,27 @@ import se.tube42.editor.compo.io.*;
         Database.current_format = Database.FORMATS[0];
         Database.current_region = null;
     }
-    
-    
+
+
     /* package */ static void run()
-    {        
+    {
         try {
             // save to memory
-            ByteArrayOutputStream os = new ByteArrayOutputStream();            
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             CompositionWriter cw = new CompositionWriter(os);
             cw.write();
-            
+
             // load from memory
-            byte [] data = os.toByteArray();            
-            ByteArrayInputStream is = new ByteArrayInputStream(data);            
+            byte [] data = os.toByteArray();
+            ByteArrayInputStream is = new ByteArrayInputStream(data);
             Composition c = Composition.load(is);
-            
+
             // show it!
-            if(c != null) 
+            if(c != null)
                 new TestWindow(c);
-            
+
         } catch(Exception e) {
             System.err.println("ERROR: " + e);
-        }                    
-    }        
+        }
+    }
 }

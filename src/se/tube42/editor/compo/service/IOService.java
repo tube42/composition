@@ -7,14 +7,14 @@ import se.tube42.editor.compo.data.*;
 import se.tube42.editor.compo.io.*;
 
 /* package */ class IOService
-{    
-    
+{
+
     // IO
     /* package */ static boolean save(String filename)
     {
-        OutputStream os = null;        
+        OutputStream os = null;
         try {
-            os = new FileOutputStream(filename);            
+            os = new FileOutputStream(filename);
             CompositionWriter cw = new CompositionWriter(os);
             cw.write();
         } catch(Exception e) {
@@ -28,16 +28,16 @@ import se.tube42.editor.compo.io.*;
                 }
             } catch(IOException e) { }
         }
-        
+
         Database.filename = filename;
-        return true;        
+        return true;
     }
-    
+
     /* package */ static boolean load(String filename)
     {
         InputStream is = null;
         try {
-            is = new FileInputStream(filename);            
+            is = new FileInputStream(filename);
             CompositionReader2 c2 = new CompositionReader2(is);
             c2.read();
         } catch(Exception e) {
@@ -46,10 +46,10 @@ import se.tube42.editor.compo.io.*;
         } finally {
             try {
                 if(is != null) is.close();
-            } catch(IOException e) { }                
+            } catch(IOException e) { }
         }
-        
-        Database.filename = filename;        
-        return true;        
-    }    
+
+        Database.filename = filename;
+        return true;
+    }
 }

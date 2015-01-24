@@ -11,7 +11,7 @@ public abstract class DBCanvas extends Canvas
     private int w, h;
     private Graphics g;
     private Image image;
-    
+
     public DBCanvas()
     {
         this.image = null;
@@ -19,61 +19,61 @@ public abstract class DBCanvas extends Canvas
         this.w = -1;
         this.h = -1;
     }
-    
-    /** 
+
+    /**
      * implement this instead of paint() for
-     * some double-buffering magic. 
-     * 
+     * some double-buffering magic.
+     *
      * Gosling sure knew his shit when he designed Java...
      */
     public abstract void bufferedPaint(Graphics g);
-    
+
     public final void update(Graphics g)
     {
         paint(g);
     }
-    
+
     public final void clearAll()
     {
-        if(g != null && image != null) {            
+        if(g != null && image != null) {
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, w, h);
         }
     }
-    
+
     public final void paint(Graphics g_)
     {
         final int w_ = getWidth();
         final int h_ = getHeight();
-        
+
         if(image == null || w_ > w || h_ > h)
             create_buffer(w_, h_);
-        
+
         bufferedPaint(g);
         g_.drawImage(image, 0, 0, w_, h_, 0, 0, w_, h_, this);
     }
-    
-    
+
+
     private void create_buffer(int w, int h)
     {
-        
+
         // give it some extra space (in case resized)
         w += 64;
         h += 64;
-        
+
         if(g != null) {
             g.dispose();
             g = null;
         }
-        
+
         if(image != null) {
             // image.dispose();
             image = null;
         }
-        
+
         this.w = w;
         this.h = h;
         this.image = createImage(w, h);
         this.g = image.getGraphics();
-    }    
+    }
 }

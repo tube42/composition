@@ -12,13 +12,13 @@ public class Main
             Database.regions.add("base");
             Database.regions.add("menu_area");
         }
-        
-        MainWindow mw = new MainWindow();        
-        
+
+        MainWindow mw = new MainWindow();
+
         for(String arg : args)
             ServiceProvider.load(arg);
-        
+
         mw.everythingChanged();
-            
+
     }
 }

@@ -13,12 +13,12 @@ public class ToolbarControl extends EditorControl
           X0 = 16,
           Y0 = 16
           ;
-    
+
     private int tool = 0;
     private int sel = -1;
     private boolean active = false;
     private Image image;
-    
+
     public ToolbarControl()
     {
         try {
@@ -28,26 +28,26 @@ public class ToolbarControl extends EditorControl
             exx.printStackTrace();
         }
     }
-    
+
     public int get()
     {
         return tool;
     }
-    
+
     public void paint(Graphics g, int w, int h)
     {
-        
+
         for(int i = 0; i < COUNT; i++) {
             int x = X0 + SIZE * i;
             int y = Y0;
             int size = SIZE;
-            
+
             if(i != sel) {
                 x++;
                 y++;
                 size -= 2;
             }
-            
+
             if(i == tool) {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(x, y, size, size);
@@ -56,25 +56,25 @@ public class ToolbarControl extends EditorControl
                 g.drawRect(x, y, size, size);
             }
         }
-        
+
         if(image != null) {
             g.drawImage( image, X0, Y0, null);
         }
     }
-    
+
     public boolean touch(int x, int y, boolean down, boolean drag)
     {
         int get = lookup(x, y);
         if(down && !drag) {
             sel = get;
             active = sel != -1;
-        }  
-        
+        }
+
         if(!active) return false;
-        
-        if(sel != get) 
+
+        if(sel != get)
             sel = -1;
-        
+
         if(!down) {
             if(sel != -1) {
                 tool = sel;
@@ -82,16 +82,16 @@ public class ToolbarControl extends EditorControl
                 return true;
             }
         }
-        
-        return active;  
+
+        return active;
     }
-    
+
     // ---------------------------------------------
     private int lookup(int x, int y)
     {
-        if(y < Y0 || y > Y0 + SIZE) return -1;        
-        
+        if(y < Y0 || y > Y0 + SIZE) return -1;
+
         final int n = (x - X0) / SIZE;
-        return (n < 0 || n >= COUNT) ? -1 : n;        
+        return (n < 0 || n >= COUNT) ? -1 : n;
     }
 }

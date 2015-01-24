@@ -9,11 +9,11 @@ public abstract class EditorControl
 {
     protected static RegionData region;
     protected static int x0, y0, w0, h0;
-    
+
     public abstract void paint(Graphics g, int w, int h);
     public abstract boolean touch(int x, int h, boolean down, boolean drag);
-    
-    
+
+
     public int snap(int point)
     {
         if(Database.grid_enable) {
@@ -23,5 +23,5 @@ public abstract class EditorControl
         }
         return point;
     }
-        
+
 }
