@@ -29,13 +29,12 @@ public final class Region
         if(count < 2)
             return center(horiz, size);
 
-        final int tot = horiz ? w : h;
-        final int gap = Math.min(maxgap,
-                  (tot - size * count) / (count - 1));
-
-        return (horiz ? x : y) + (tot - size * count -  gap * (count-1) ) / 2 + index * (size + gap);
+        final int gap = computeGap(horiz, count, size, maxgap);
+        final int start = computeStart(horiz, count, size, gap);
+        return start + index * (size + gap);
     }
 
+    /* center it within this region */
     public int center(boolean horiz, int size)
     {
         return horiz ?
@@ -43,12 +42,30 @@ public final class Region
               (y + (h - size) / 2);
     }
 
+    /* position it at one end of this region */
     public int position(boolean horiz, boolean start, int size, int gap)
     {
         if(horiz) {
             return x + (start ? gap : (w - size - gap));
         } else {
             return y + (start ? gap : (h - size - gap));
+        }
+    }
+
+    /* compute the gap for a series of these objects */
+    public int computeGap(boolean horiz, int count, int size, int maxgap)
+    {
+        int r = ((horiz ? w : h) - size * count) / Math.max(1, count - 1);
+        return (maxgap > 0 && r > maxgap) ? maxgap : r;
+    }
+
+    /* compute the start for a series of these objects centered here*/
+    public int computeStart(boolean horiz, int count, int size, int gap)
+    {
+        if(horiz) {
+            return x + (w - size * count - gap * (count - 1)) / 2;
+        } else {
+            return y + (h - size * count - gap * (count - 1)) / 2;
         }
     }
 }
