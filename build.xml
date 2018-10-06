@@ -1,7 +1,6 @@
 <project name="Composition" default="help" basedir=".">
   <property name="src" location="src"/>
   <property name="build" location="build"/>
-  <property name="site" location="../tube42.github.io/composition/bin" />
   
   <!-- use 1.6 for Android compatibility -->  
   <property name="ant.build.javac.target" value="1.6" />
@@ -41,19 +40,6 @@
     <javadoc sourcepath="src" destdir="docs" packagenames="se.tube42.lib.*" />
   </target>
   
- <!-- create a new jar file and upload it to github -->
-  <target name="publish" depends="dist" >
-    <copy file="Composition_lib.jar" todir="${site}"/>    
-    <exec executable="git" dir="${site}">
-      <arg line="add Composition_lib.jar"/>
-    </exec>        
-    <exec executable="git" dir="${site}">
-      <arg line="commit Composition_lib.jar -m 'published comp from build.xml'"/>
-    </exec>        
-    <exec executable="git" dir="${site}">
-      <arg line="push"/>
-    </exec>    
-  </target>
     
   <target name="help">
     <echo>
@@ -61,9 +47,7 @@
       editor  runs the editor
       dist    creates library jar file
       doc     creates API docs
-      clean   cleans up
-      
-      publish **INTERNAL USE ONLY: UPLOADS DIST TO GITHUB**      
+      clean   cleans up      
     </echo>
   </target>
   
